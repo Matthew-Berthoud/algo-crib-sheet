@@ -1,0 +1,49 @@
+% ---- generic definition ----
+UnionFind for Disjoint Sets: given \textit{n} singletons: 
+$S_i = {i}$ for $i = 1, ..., n$
+% operations
+1. \textit{union}($S_i$, $S_j$) return $S_i U S_j$, where $S_i$ and $S_j$ are disjoint; 
+2. \textit{findSet(i)} gives the set of \textit{i}.
+3. \textit{makeSet(i)} creates a singleton set with \textit{i}
+% generic definition from above can be omitted
+\\
+%
+% these two heuristics improve running time
+Disjoint set forests: set is a rooted tree; each node contains a member; 
+root acts as the set representative
+1. union (by rank): rank is (upper bound) height of node 
+(\# of edges from leaf to node); make root with smaller rank point to root with larger rank
+2. findSet (by path compression): first pass finds the path to the root; 
+second pass updates all the nodes in the path to point to root
+
+% complexity
+(worst-case) $T(n) = O(m\alpha(n))$, where m = total operations, n = \# of elements, 
+$\alpha(n) (\le 4)$ is a very slowly growing fun (inverse Ackermann's fun)
+% the "Properties about ranks:" bit can be skipped as it proves the time 
+% complexity of UnionFind is slowly growing: O(mlog*n) or O(mα(n))
+
+% including notes on two heaps for completeness - although I don't think we did
+% problems on heaps or studied it in class?
+% binary heaps
+Binary Heaps: 
+1. max heap property - parent is no smaller(or $\ge$) than its children;
+2. as an array ($H[n]$) - for $H[i]$ , parent = $H[\lfloor i/2 \rfloor]$, 
+left child = $H[2i]$, right child = $H[2i+1]$
+3. heap sort (worst-case): $O(nlogn)$
+4. heap height: $\Omega(logn)$
+5. operations: $Insert(H, x)-log(n)$, $ExtractMax(H)-log(n)$, 
+$FindMax(H)-O(1)$, $MakeHeap(H)-O(n)$
+% useful to understand array ordering -- homework 2 problem 4
+5. \href{https://www.mimuw.edu.pl/~erykk/algovis/heapsort.html}{Heap Sort Viz.}
+
+% fibonacci heaps
+Fibonacci Heaps/Mergeable Heaps: 
+1. implemented using binary heaps
+2. new operations: $Union(H_1,H_2)-O(n)$, $DecreaseKey(H,x,k)-O(log(n))$, 
+$Delete(H,x)-O(log(n))$
+3. lots of moving parts in this: here's a \href{https://www.youtube.com/watch?v=0vsX3ZQFREM}{6 minute video} on fibonacci heaps; 
+\href{https://www.utsc.utoronto.ca/~atafliovich/cscb63/content/week10/clrs_fibonacci_chapter.pdf}{chapter from CLRS}, 
+and \href{https://www.cs.princeton.edu/~wayne/teaching/fibonacci-heap.pdf}{easy to follow slides}.
+
+% 
+% problems on disjoint sets are in homework 5
