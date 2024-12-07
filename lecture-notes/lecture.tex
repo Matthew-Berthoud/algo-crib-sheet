@@ -1,0 +1,3273 @@
+\documentclass{article}
+
+\usepackage{exscale}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{latexsym}
+\usepackage{times,mathptm}
+
+
+\oddsidemargin -0.1in
+\textwidth 6.8in
+\topmargin -0.5in
+\textheight 9in
+%\def\baselinestretch{1.1}
+
+\begin{document}
+
+\begin{Large}
+\centerline {\bf CS653 Analysis of Algorithms}
+\end{Large}
+
+\section{Mathematical Foundations}
+
+\subsection{Common functions}
+
+\noindent{\em Reading: CLRS 3.2 }
+
+\begin{itemize}
+
+\item Ceilings and floors: $\lceil x \rceil$ and $\lfloor x \rfloor$.
+
+\item Modular arithmetic: $a\bmod n=a-\lfloor a/n\rfloor n$.
+$a\equiv b\bmod n$ iff $a\bmod n= b\bmod n$.
+
+\item Polynomials: $p(n)=\sum_{i=0}^d a_in^i$. (Note: Coefficients
+$a_i$ and degree $d$ are constants.)
+
+\item Exponentials: $a^0=1$, $a^{-1}={1\over a}$, $a^m\cdot a^n=a^{m+n}$,
+$a^m/a^n=a^{m-n}$.
+
+$e^x=1+x+{x^2\over 2!}+{x^3\over 3!}+\cdots$. (Note: $e=2.71828\ldots$.)
+
+$\lim_{n\to\infty}{(1+{x\over n})}^n=e^x$.
+
+\item Logarithms: $\log n=\log_2 n$ or $\log_c n$ for some $c$ we don't care
+about.
+
+$\log(ab)=\log a+\log b$, $\log ({a\over b})=\log a-\log b$.
+
+$\log_a b={{\log_c b}\over {\log_c a}}$.
+
+$\log_a b^n=n\log_a b\not={(\log_a b)}^n$, $a^{\log_a n}=n$,
+$a^{\log_c b}=b^{\log_c a}$.
+
+$ln(1+x)=x-{x^2\over 2}+{x^3\over 3}-{x^4\over 4}+\cdots$.
+
+\item Factorials: $n!=n\cdot (n-1)\cdots 2\cdot 1$.
+
+$n!=n\cdot (n-1)!$, $0!=1$.
+
+Sterling's approximation: $n!=\sqrt{2\pi n}({n\over e})^n(1+
+\Theta({1\over n}))$. (Note: $\Theta$ means having the same order of 
+magnitude.) The following approximation also holds:
+$n!=\sqrt{2\pi n}({n\over e})^ne^{\alpha_n}$, where
+${1\over 12n+1}<\alpha_n<{1\over 12n}$.
+
+$\log n!=\Theta(n\log n)$.
+
+\item Functional iteration: A function $f$ applied iteratively $i$ times
+to an initial argument $n$. Defined recursively, $f^{(0)}(n)=n$ and
+$f^{(i)}(n)=f(f^{(i-1)}(n))$ for $i>0$. (Note: The distinction between
+$f^{(i)}(n)$ and $f^i(n)$.)
+
+For example, if $f(n)=2n$ then $f^{(i)}(n)=2^in$.
+
+\item The log star function: $\log^* n=\min\{i\ge0:\log^{(i)}n\le1\}$,
+which is a very slowly growing function. $\log^*2=1$, $\log^* 4=2$,
+$\log^*16=3$, $\log^*65536=4$, $\log^*2^{65536}=5$.
+
+\item Combinatorics: Permutation $n!$ (order matters);
+Combination ${n\choose k}={n!\over {k!(n-k)!}}$ (order doesn't matter).
+
+Pascal's triangle: ${n\choose k}={{n-1}\choose k}+{{n-1}\choose {k-1}}$.
+
+Binomial expansion: $(x+y)^n=\sum_{k=0}^n {n\choose k}x^ky^{n-k}$.
+
+\end{itemize}
+
+\subsection{Sums}
+
+\noindent{\em Reading: CLRS A}
+
+\begin{itemize}
+
+\item Arithmetic: $1+2+\cdots+n={1\over2}n(n+1)$.
+
+\item Geometric: $1+r+r^2+\cdots+r^n={{r^{n+1}-1}\over{r-1}}$ for
+$r\not=1$.
+
+$1+r+r^2+\cdots={1\over{1-r}}$ for $|r|<1$.
+
+\item Harmonic: $H_n=1+{1\over2}+{1\over3}+\cdots+{1\over n}
+=\ln n+\gamma+{\epsilon\over{2n}}$ for $\gamma=0.5772156649\ldots$
+(Euler's constant) and $0<\epsilon<1$.
+
+{\em Example:} Prove that $H_n<\ln n+1$.
+
+{\em Proof:} $H_n=\sum_{i=1}^n{1\over i}=1+\sum_{i=2}^n{1\over i}
+<1+\int_1^n {1\over x}dx=1+\ln n$.
+
+\vskip 0.25cm
+\begin{center}
+\includegraphics[height=1.5in]{f1.pdf}
+\end{center}
+
+{\em Remark:} Use integrals to bound summations:
+Assume $f(x)$ is monotonically decreasing, then
+$\int_m^{n+1} f(x)dx\le \sum_{k=m}^nf(k)\le\int_{m-1}^nf(x)dx$.
+(What if the function is monotonically increasing?)
+
+\item Binomial: ${n\choose 0}+{n\choose 1}+{n\choose 2}+
+\cdots+{n\choose n}=2^n$.
+
+\item Other useful sums:
+
+$\sum_{i=1}^n i^2={1\over6}n(n+1)(2n+1)$.
+
+$\sum_{i=1}^n i^3=(\sum_{i=1}^n i)^2$.
+
+$\sum_{i=1}^n ix^{i-1}={{nx^{n+1}-(n+1)x^n+1}\over{(x-1)^2}}$.
+
+\end{itemize}
+
+\subsection{Asymptotic notation}
+
+\noindent{\em Reading: CLRS 3.1}
+
+\begin{itemize}
+
+\item Used to compare the growth rate or order of magnitude
+of increasing functions. ``Asymptotic'' deals with the 
+behavior of functions in the limit, for sufficiently large
+values of variables.
+
+\item $f(n)=O(g(n))$ if $\exists c, n_0$ such that 
+$f(n)\le cg(n)$ for $n\ge n_0$.
+
+\item $f(n)=\Omega(g(n))$ if $\exists c, n_0$ such that
+$f(n)\ge cg(n)$ for $n\ge n_0$.
+
+\item $f(n)=\Theta(g(n))$ if $\exists c_1, c_2, n_0$ such that
+$c_1g(n)\le f(n)\le c_2g(n)$ for $n\ge n_0$.
+
+\item $f(n)=o(g(n))$ if $\forall c$ $\exists n_0$ such that
+$f(n)<cg(n)$ for $n\ge n_0$. 
+
+\item $f(n)=\omega(g(n))$ if $\forall c$ $\exists n_0$ such that 
+$f(n)>cg(n)$ for $n\ge n_0$.
+
+\item {\em Remarks:} 
+\begin{itemize}
+\item In CLRS, the above notation is defined as sets of functions.
+For example, $f(n)\in O(g(n))$. But we will simply follow
+the mainstream here.
+\item $O(\le)$, $\Omega(\ge)$, $\Theta(=)$, $o(<)$, $\omega(>)$.
+\item $f(n)=O(g(n))$ iff $g(n)=\Omega(f(n))$, and
+$f(n)=o(g(n))$ iff $g(n)=\omega(f(n))$.
+\item $f(n)=\Theta(g(n))$ iff $f(n)=O(g(n))$ and $f(n)=\Omega(g(n))$.
+\item $f(n)=O(g(n))$ if $f(n)=o(g(n))$, and
+$f(n)=\Omega(g(n))$ if $f(n)=\omega(g(n))$.
+\item An alternative definition for $f(n)=o(g(n))$ is 
+$\lim_{n\to\infty}{f(n)\over g(n)}=0$. Likewise, an alternative definition
+for $f(n)=\omega(g(n))$ is $\lim_{n\to\infty}{f(n)\over g(n)}=\infty$.
+\item Asymptotic notation ignores constant factors and lower-order terms.
+\item {\em Rule of thumb:} constant $\le$ polylogarithmic $\le$ polynomial
+$\le$ exponential $\le$ superexponential.
+
+{\em Example:} $1$, $\sqrt{\log n}$, $\ln n$, $(\log n)^2$, $\sqrt n$,
+$\sqrt n \log n$, $10n$, $n\log n$, $n^2$, $n^{\log\log n}$,
+$2^n$, $n2^n$, $n!$, $2^{2^n}$.
+\item Taking logarithms helps: $f(n)=O(g(n))$ iff $\log f(n)=O(\log g(n))$.
+\end{itemize}
+
+\end{itemize}
+
+\subsection{Proof techniques}
+
+\begin{itemize}
+
+\item Proving by contradiction: 
+
+The following three statements are logically equivalent:
+
+\begin{enumerate}
+\item If $A$ then $B$.
+\item If not $B$ then not $A$.
+\item If $A$ and not $B$ then not $C$, where $C$ is a proved fact or axiom.
+\end{enumerate}
+
+{\em Example:} Use contradiction to prove that 
+(a) There are infinitely many prime numbers; (b) There exist two
+irrational numbers $x$ and $y$ such that $x^y$ is rational; and
+(c) $\sqrt 2$ is irrational.
+
+{\em Proof:} Exercises or references.
+
+\item Proving by induction:
+
+The following statements are mathematically equivalent:
+
+\begin{enumerate}
+\item $P(n)$ for integers $n\ge c$.
+\item Simple integer induction: $P(c)$ and $P(n-1)\rightarrow P(n)$. 
+(What are inductive basis, inductive hypothesis, and inductive step?) 
+\item General integer induction: $P(c)$ and $(\forall i:c\le i\le n-1)
+P(i)\rightarrow P(n)$.
+\end{enumerate}
+
+There are two additional types of induction:
+
+\begin{enumerate}
+\item Structural induction: To prove a property $P(X)$ of a recursively
+defined structure $X$, it is suffice to prove that $P(X)$ is true for
+the basis structure $X$ and $P(Y_1)\land P(Y_2)\land\cdots\land P(Y_k)
+\rightarrow P(X)$, where $X$ is constructed from $Y_1, Y_2, \ldots, Y_k$.
+\item Mutual induction: Used in the case when a single statement
+$P_1(n)$ can not be proved by induction but rather $P_1(n)$ together
+with some other statements $P_2(n),\ldots$ can be proved successfully
+by induction.
+\end{enumerate}
+
+{\em Example:} Use induction to prove that (a) The tiling 
+problem can always be solved; (b) Every positive composite
+integer can be expressed as a product of prime numbers; and
+(c) Every tree has one more node than it has edges.
+
+{\em Proof:} Exercises or references.
+
+{\em Remark:} What is the tiling problem? Given a board divided
+into $m=2^k$ squares in each row and each column with one square
+marked special. Given a supply of tiles, each being a $2\times 2$
+board with one square removed. The puzzle is to cover the board with
+the tiles so that each square is covered exactly once, with the
+exception of the special square, which is not covered at all. 
+
+\end{itemize}
+
+\subsection{Solving recurrences}
+
+\noindent{\em Reading: CLRS 4}
+
+\begin{itemize}
+
+\item Recurrence is an equation or inequality that defines a function
+in terms of the function's values on smaller inputs. For example,
+$T(1)=\Theta(1)$ (boundary condition) and $T(n)=2T({n\over 2})+\Theta(n)$ for 
+$n\ge 2$ or almost equivalently, $T(1)=1$ and $T(n)=2T({n\over2})+n$ for $n\ge2$.
+
+\item {\em Remark:} We may neglect some technical details due to our
+interest in asymptotic solutions: 
+\begin{itemize}
+\item Relax the integer argument requirement
+on functions.
+\item Assume boundary condition $T(n)=\Theta(1)$ for small $n$
+if not defined.
+\item Use $\Theta(f(n))$ or $f(n)$ at will in the recursive definition.
+\end{itemize}
+
+\item The substitution method: Guess and verify.
+
+{\em Example:} $T(n)=2T({n\over2})+n$.
+
+First guess $T(n)=O(n\log n)$. Next prove that 
+$T(n)\le cn\log n$ for some $c$ and $n\ge 2$. (Why not start from $n=1$?)
+
+Inductive basis: For $n=2$, $T(2)=2T(1)+2=4\le c2\log 2$ if $c\ge2$.
+
+Inductive step: Assume $T({n\over2})\le c{n\over2}\log{n\over2}$.
+\begin{eqnarray*}
+T(n)&=&2T({n\over2})+n\\
+&\le&cn\log{n\over2}+n\\
+&=&cn\log n-cn+n\\
+&<&cn\log n.
+\end{eqnarray*}
+
+{\em Remarks:}
+\begin{itemize}
+\item Making a good guess. 
+\item To prove $T(n)=O(f(n))$, sometimes we use an inequality
+stronger than $T(n)\le cf(n)$ in the induction (such as 
+$T(n)\le 20cf(n)$).
+
+\item Avoid using asymptotic notation in the inductive proof.
+
+{\em Exercise:} $T(n)=T(n-1)+n$. What is wrong with the following proof?
+
+First guess $T(n)=O(n)$.
+
+Inductive basis: For $n=1$, $T(1)=1=O(1)$.
+
+Inductive step: Assume $T(n-1)=O(n-1)$
+\begin{eqnarray*}
+T(n)&=&T(n-1)+n\\
+&=&O(n-1)+n\\
+&=&O(n).
+\end{eqnarray*}
+\item Changing variables.
+
+{\em Example:} $T(n)=2T(\sqrt{n})+\log n$. 
+
+First, renaming $m=\log n$ yields $T(2^m)=2T(2^{m/2})+m$.
+Next, renaming $S(m)=T(2^m)$ yields $S(m)=2S(m/2)+m$. 
+Since $S(m)=O(m\log m)$, $T(n)=T(2^m)=S(m)=O(m\log m)=O(\log n\log\log n)$.
+\end{itemize}
+
+\item The iteration method: Apply recurrence until a summation pattern 
+can be figured out.
+
+{\em Example:} $T(n)=3T({n\over4})+n$.
+
+Assume $n=4^k$, so $k=\log_4 n$.
+\begin{eqnarray*}
+T(n)&=&3T({n\over4})+n\\
+&=&3^2T({n\over{4^2}})+{3\over4}n+n\\
+&=&3^3T({n\over{4^3}})+({3\over4})^2n+({3\over4})n+n\\
+&=&\cdots\\
+&=&3^kT({n\over{4^k}})+(({3\over4})^{k-1}+\cdots+({3\over4})+1)n\\
+&=&3^{\log_4 n}+{{1-({3\over4})^{\log_4 n}}\over{1-{3\over4}}}n\\
+&=&4n-3\cdot 3^{\log_4 n}\\
+&=&O(n).
+\end{eqnarray*}
+
+{\em Exercise:} Solve $T(n)=\sqrt nT(\sqrt n)+n$ by iteration.
+
+\item The recursion-tree method: 
+Similar to the iteration method, use a tree for bookkeeping.
+
+{\em Example:} $T(n)=T({n\over3})+T({2n\over3})+n$.
+
+\vskip 0.25cm
+\begin{center}
+\includegraphics[height=2.75in]{f2.pdf}
+\end{center}
+
+{\em Exercise:} Solve $T(n)=T(\alpha n)+T((1-\alpha)n)+n$, where
+$0<\alpha<1$, by recursion tree.
+
+\item The master method:
+
+{\em Theorem:} If $T(n)=aT({n\over b})+f(n)$ for $a\ge1$ and $b>1$, then
+
+(a) if $f(n)=O(n^{(\log_ba)-\epsilon})$ for some $\epsilon>0$, then
+$T(n)=\Theta(n^{\log_ba})$;
+
+(b) if $f(n)=\Theta(n^{\log_ba})$, then
+$T(n)=\Theta(n^{\log_ba}\log n)$;
+
+(c) if $f(n)=\Omega(n^{(\log_ba)+\epsilon})$ for $\epsilon>0$ and if
+$af({n\over b})\le cf(n)$ for $c<1$ and all large $n$, then
+$T(n)=\Theta(f(n))$.
+
+{\em Remark:} The master method does not cover all cases.
+
+{\em Example:} $T(n)=3T({n\over4})+n\log n$.
+
+$a=3$, $b=4$, and $f(n)=n\log n$.
+Case (c) applies. So $T(n)=\Theta(n\log n)$.
+
+{\em Exercise:} Solve $T(n)=4T({n\over2})+f(n)$ by the master 
+theorem for $f(n)=n, n^2, n^3$.
+
+\end{itemize}
+
+\newpage
+
+\section{Analysis of Algorithms}
+
+\subsection{An overview}
+
+\noindent{\em Reading: CLRS 1}
+
+\begin{itemize}
+
+\item Problem types:
+
+%By requirement: Search, structuring, construction, optimization,
+%decision, adaptive.
+
+By difficulty: conceptually hard, analytically hard,
+computationally hard, computationally unsolvable.
+
+\item Algorithms:
+
+Correctness, finiteness, definiteness (unambiguity), effectiveness, output.
+
+Pseudocode = human language + math language + computer language.
+
+Analysis of algorithms: w/o programming, testing, and debugging.
+
+\item Complexity measures: Time, space $\leftrightarrow$
+worst, average.
+
+Time is measured as the number of basic steps in a prespecified
+computation model.
+
+\item Models of computation (to define basic steps):
+
+Turing machine: Basic step: Read-write-move-change.
+
+Random Access Machine: Basic step: LOAD, STORE, ADD, SUB, MULT, DIV,
+READ, WRITE, JUMP, JGTZ, JZERO, HALT.
+
+Pseudocode: Basic step: $+$, $-$, $*$, $/$, assignment, compare, if,
+i/o. (for, while, $**$ are not.)
+
+Polynomial equivalence of all reasonable computing models.
+
+\item Instance: A specific input.
+
+{\em Example:} Problem: Sort a list of numbers into increasing order;
+Instance: $L=(5,1,4,2,3)$.
+
+\item Instance (Input) size: 
+The amount of space used to store the instance.
+
+{\em Example:}
+\begin{center}
+\begin{tabular}{r|l}
+Instance & Size\\\hline
+List & \# of items \\
+Matrix & \# of rows and columns \\
+Graph & \# of vertices and edges \\
+Integer & \# of bits
+\end{tabular}
+\end{center}
+
+\item Time complexity: $T(n)$: \# of basic steps in the pseudocode model.
+
+{\em Remarks:}
+\begin{itemize}
+\item Functions of input size, not input value, represented in $O$, $\Omega$,
+$\Theta$ (easy to compare; asymptotic performance for large input size).
+\item Input-value independent, programming independent, language independent,
+machine independent.
+\end{itemize}
+
+\item A spectrum of complexity:
+
+Classify problems into categories according to the worst-case time
+complexity of their fastest possible (optimal) algorithms.
+
+\begin{center}
+\begin{tabular}{r|l}
+Degree of difficulty & Problem examples\\\hline\hline
+Unsolvable & Halting problem\\\hline
+Superexponential & Presburger arithmetic $2^{2^n}$\\
+Exponential & Circularity attribute grammar $2^n$\\\hline
+Polynomial & Linear programming (LP)\\
+$n^c$, for $2\le c<3$ & Matrix multiplication\\
+$n\log n$ & Sorting by comparison\\
+$n$ & Selecting the $k$th largest
+\end{tabular}
+\end{center}
+
+\end{itemize}
+
+\subsection{Worst-case analysis}
+
+\noindent{\em Reading: CLRS 2.1 and 2.2}
+
+\begin{itemize}
+
+\item Definition: 
+
+$I_n$: Any instance of size $n$;
+
+$t(I_n)$: Time (\# of basic steps) spent on $I_n$ by the algorithm;
+
+$T(n)$: Worst-case time complexity of any instance of size $n$,
+$T(n)=\max_{\forall I_n}\{t(I_n)\}$.
+
+\item Insertion sort: $A\Rightarrow A$ sorted in increasing order.
+
+Insertion\_Sort($A$)
+\par\quad for $j\leftarrow 2$ to $n$
+\par\quad\quad $key\leftarrow A[j]$
+\par\quad\quad $i\leftarrow j-1$
+\par\quad\quad while $i>0$ and $A[i]>key$
+\par\quad\quad\quad $A[i+1]\leftarrow A[i]$
+\par\quad\quad\quad $i\leftarrow i-1$
+\par\quad\quad $A[i+1]\leftarrow key$
+
+To insert $A[j]$ into the sorted $A[1\ldots j-1]$, the algorithm
+will make at most $j-1$ comparisons and $j-1$ shifts. So the overall 
+time complexity,
+which is dominated by the number of comparisons and the number of
+shifts, is at most $2\sum_{j=2}^n(j-1)
+=\Theta(n^2)$.
+
+\item Euclid's algorithm (300 B.C.): Greatest common divisor.
+
+If $n\not=0$, then $gcd(m,n)=gcd(n, m \bmod n)$;
+
+If $n=0$, then $gcd(m,n)=m$.
+
+Euclid($m,n$)\qquad //Assume $m\ge n$
+\par\quad while $n>0$
+\par\quad\quad $t\leftarrow m\bmod n$
+\par\quad\quad $m\leftarrow n$
+\par\quad\quad $n\leftarrow t$
+\par\quad return $m$
+
+The time complexity of the algorithm is determined by the number of iterations
+of the while-loop. Let it be $k$. Also let $m_i$ and $n_i$ be the values of
+$m$ and $n$ at the end of the $i$th iteration, respectively.
+
+We observe that (1) $n_k=0$, $n_i\ge 1$ for $i<k$, and 
+$n_0>n_1>\cdots>n_k$; (2) $m_i=n_{i-1}$, which implies that $m_i\ge n_i$ 
+for $i\ge1$; (3) $n_i=m_{i-1} \bmod n_{i-1}<{m_{i-1}\over2}={n_{i-2}\over2}$
+for $i\ge2$. (Note: If $a\ge b$, then $a\bmod b<{a\over2}$.)
+
+We then have $1\le n_{k-1}<{n_{k-3}\over2}<{n_{k-5}\over2^2}<\cdots<
+{(n_1,n_0)\over2^{\lceil k/2\rceil-1}}\le {n_0\over2^{\lceil k/2\rceil-1}}$.
+
+Thus, ${k\over2}-1\le\lceil{k\over2}\rceil-1<\log n_0$,
+which implies $k\le 2+2\log n_0$.
+
+So $T(m,n)=O(k)=O(\log n)$.
+
+\item Multiplying two integers $x$ and $y$: 
+
+Assume that $x$ (multiplicand) and $y$ (multiplier) 
+have the same number of figures, $n=2^k$,
+denoted $(x)_n$ and $(y)_n$.
+Then $(x)_n=10^{n\over2}\cdot(a)_{n\over2}+(b)_{n\over2}$ and
+$(y)_n=10^{n\over2}\cdot(c)_{n\over2}+(d)_{n\over2}$.
+
+So $(x)_n\cdot(y)_n=10^n((a)_{n\over2}\cdot (c)_{n\over2})+
+10^{n\over2}((a)_{n\over2}\cdot (d)_{n\over2}+ (b)_{n\over2}\cdot
+(c)_{n\over2})+(b)_{n\over2}\cdot (d)_{n\over2}$. The problem of 
+multiplying two integers of size $n$ is now reduced to four subproblems
+of multiplying two integers of size $n\over2$.
+
+$T(n)=4T({n\over2})+n=\Theta(n^2)$ by the master theorem.
+
+Now let $s=(a)_{n\over2}\cdot (c)_{n\over2}$,
+$t=(b)_{n\over2}\cdot (d)_{n\over2}$, and
+$r=((a)_{n\over2}+(b)_{n\over2})\cdot((c)_{n\over2}+(d)_{n\over2})$.
+Then $(x)_n\cdot(y)_n=10^ns+10^{n\over2}(r-s-t)+t$. Only three
+subproblems have to be solved in the recursion.
+
+$T(n)=3T({n\over2})+n=\Theta(n^{\log_23})=\Theta(n^{1.585})$ 
+by the master theorem.
+\end{itemize}
+
+%\newpage
+\subsection{Average-case analysis}
+
+\noindent{\em Reading: CLRS 2.2}
+
+\begin{itemize}
+
+\item Definition:
+
+$I_n$: Any instance of size $n$;
+
+$t(I_n)$: Time (\# of basic steps) spent on $I_n$ by the algorithm;
+
+$p(I_n)$: Probability that $I_n$ appears as input;
+
+$T(n)$: Average-case time complexity of any instance of size $n$,
+$T(n)=\sum_{\forall I_n}p(I_n)t(I_n)$.
+
+\item Insertion sort:
+
+Assumptions: (1) Distinct items; (2) Each permutation with equal
+probability to occur.
+
+$T(n)=$ average \# of pairwise comparisons $=\sum_{j=2}^n c_j$, where
+$c_j$ is the average \# of comparisons to insert $A[j]$ ($key$) into the sorted
+$A[1\ldots j-1]$. For $key$, there are $j$ possible positions, with 
+probability ${1\over j}$ for each.
+
+So $c_j={1\over j}\cdot 1+{1\over j}\cdot 2+\cdots+{1\over j}\cdot (j-1)
++{1\over j}\cdot (j-1)={1\over2}(j+1)-{1\over j}$.
+
+Therefore, $T(n)=\sum_{j=2}^n({1\over2}(j+1)-{1\over j})
+={1\over4}n^2+{3\over4}n-H_n=\Theta(n^2)$.
+
+\item Binary search
+
+Given $A[1\ldots n]$ sorted and $x$ (a query). Is $x$ a member of $A$?
+
+{\em Example:} Let $n=7$. The binary search algorithm can be illustrated
+by the following decision tree.
+
+\vskip 0.25cm
+\begin{center}
+\includegraphics[height=1.1in]{f3.pdf}
+\end{center}
+
+Assumptions: (1) $x\in A$; (2) Distinct items in $A$; (3)
+$Pr(x=A[i])={1\over n}$ for any $i=1,2,\ldots,n$; (4) $n=2^k-1$ for some $k$.
+
+Binary search $\Rightarrow$ Decision tree of $n$ nodes (full binary tree
+with $k$ levels).
+
+Average-case time $\Rightarrow$ Average length of a path from the root to
+a tree node.
+
+\begin{center}
+\begin{tabular}{l|l|l}
+Level & \# of nodes & average length\\ \hline
+1 & 1 & ${1\over n}\cdot 1$\\
+2 & 2 & ${2\over n}\cdot 2$\\
+3 & 4 & ${4\over n}\cdot 3$\\
+$\cdots$ & $\cdots$ & $\cdots$\\
+$k$ & $2^{k-1}$ & ${2^{k-1}\over n}\cdot k$
+\end{tabular}
+\end{center}
+
+\begin{eqnarray*}
+T(n)&=&\sum_{i=1}^k {2^{i-1}\over n}\cdot i\\
+&=&{1\over n}\sum_{i=1}^k i\cdot 2^{i-1}\\
+&=&{1\over n}(k\cdot 2^k-2^k+1)\\
+&=&k+{k\over n}-1\\
+&=&\Theta(\log n)
+\end{eqnarray*}
+
+\item Binary search trees (BST)
+
+What is the average number of comparisons needed to insert $n$
+distinct random elements into an initially empty BST?
+
+$T(0)=T(1)=0$.
+
+Assume that $A=(a_1,\ldots,a_n)$ is the list given and that 
+$B=(b_1,\ldots,b_n)$ is $A$ sorted increasingly.
+That $A$ is a random sequence implies that $a_1$ is equally likely
+to be $b_j$ for any $1\le j\le n$. Consider the tree obtained after
+the insertion of all $n$ numbers.
+
+\vskip 0.25cm
+\begin{center}
+\includegraphics[height=1.1in]{f4.pdf}
+\end{center}
+
+So $T(n)={1\over n}\sum_{j=1}^n(n-1+T(j-1)+T(n-j))=n-1+{2\over n}
+\sum_{j=0}^{n-1}T(j)$ for $n\ge2$.
+
+To solve this recurrence, we guess $T(n)=O(n\log n)$, i.e., 
+$T(n)\le cn\ln n$ for some $c$. We prove by induction that
+this is indeed the case.
+
+When $n=1$, $T(n)=0\le c\cdot 1\cdot \ln 1$ for any $c$. So the
+basis holds. Assume that when $j\le n-1$, $T(j)\le cj\ln j$.
+Now consider $n$.
+\begin{eqnarray*}
+T(n)&=&n-1+{2\over n}\sum_{j=0}^{n-1}T(j)\\
+&\le&n-1+{2\over n}\sum_{j=1}^{n-1}cj\ln j\\
+&\le&n-1+{2\over n}c\int_2^n x\ln xdx\\
+&\le&n-1+{2\over n}c({1\over2}n^2\ln n-{1\over4}n^2)\\
+&=&n-1+cn\ln n-{c\over2}n\\
+&\le&cn\ln n {\rm \quad for\ \ } c\ge  2
+\end{eqnarray*}
+\end{itemize}
+
+\newpage
+\subsection{Amortized analysis}
+
+\noindent{\em Reading: CLRS 17.1--17.3}
+
+\begin{itemize}
+
+\item Amortization:
+
+(1) To put money aside at intervals, as a sinking fund, for gradual payment
+of a debt;
+
+(2) To average the running times of operations in a sequence over the
+entire sequence.
+
+\item Motivation:
+
+A sequence of data structure related operations, rather than just a single
+operation, is performed. (An operation may change the data structure, thus
+affect the next operation.) 
+
+When is the total time complexity of the entire sequence?
+
+Worst-case analysis: sum of worst-case time of each operation (which may
+never be achieved).
+
+Average-case analysis: average over all possible inputs, 
+inaccurate probabilistic assumptions, hard.
+
+Amortized analysis: average over successive operations,
+average the time per operation over a worst-case sequence.
+It guarantees the average performance of each operation in the worst case.
+
+\item Stack manipulation: an example.
+
+Unit-time primitives: push and pop.
+
+An operation contains zero or more pop followed by a push.
+
+A sequence contains $m$ operations defined above. For instance,
+(push), (pop, push), (push), .... Assume that any given sequence
+never pops when the stack is empty.
+
+Initially the stack is empty.
+
+Question: What is the total time/cost of a sequence of $m$ operations?
+(as a function of $m$)
+
+Worst-case analysis: $m^2$
+
+Amortized analysis: $2m$ (Each operation causes one push and possibly
+one later pop.)
+
+\item A banker's view of amortization:
+
+To represent prepaid work as credit stored with specific
+objects within the data structure.
+
+Coin-operated computer: 1 credit $\Rightarrow$ 1 time unit
+$\Rightarrow$ 1 primitive.
+
+Sequence of operations: $O_1, \ldots, O_m$, where operation $O_i$
+is allocated with credits $c_i$.
+
+Assumptions: (1) Unused credits are carried over to later operations;
+(2) Operations can borrow credits as long as any debt is paid off
+eventually.
+
+If all sequences of length $m$ can be performed with the allocated credits,
+then the total time is no larger than $\sum_{i=1}^m c_i$. 
+
+Keys: (1) How to pick the smallest possible $c_i$; (2) How to prove
+all sequences can be performed with the allocated credits $c_1,\ldots,c_m$.
+
+Consider the stack manipulation example. Let $c_i=2$ for $i=1,\ldots,m$.
+For any operation, one credit is used to execute push in the operation, 
+while the other is saved for pop (of the same element) in a later
+operation. So in other words, each push is paid right away and each
+pop is paid for by a saved credit. So the total time is bounded
+from above by $\sum_{i=1}^m c_i=2m$.
+
+\item A physicist's view of amortization:
+
+To represent prepaid work as potential energy that can be released for future
+operations. The potential is associated with the data structure as a whole
+rather than with specific objects within the data structure.
+
+Define a potential function $\Phi: D\rightarrow R$. Assume that
+an operation takes $t_i$ time units to change the data structure
+from $D_{i-1}$ to $D_i$. Then the amortized time of the operation is
+$$a_i=t_i+\Phi(D_i)-\Phi(D_{i-1}),$$ and the total time for the 
+sequence is 
+\begin{eqnarray*}
+\sum_{i=1}^mt_i&=&\sum_{i=1}^m(a_i-\Phi(D_i)+\Phi(D_{i-1}))\\
+&=&\Phi(D_0)-\Phi(D_m)+\sum_{i=1}^ma_i\\
+&\le&\sum_{i=1}^ma_i{\rm \quad if\ \ }\Phi(D_0)\le\Phi(D_m).
+\end{eqnarray*}
+\end{itemize}
+
+Key: How to choose $\Phi$.
+
+Consider the stack manipulation example. The underlining data 
+structure is the stack. Define $\Phi(D)=$\# of items in the 
+stack. Since $\Phi(D_0)=0$ and $\Phi(D_m)\ge0$, then
+$\Phi(D_0)\le\Phi(D_m)$.
+If $O_i$ has $k$ pops and $1$ push, and $D$ contains $j$ items 
+before $O_i$ is performed, then $\Phi(D_{i-1})=j$ and 
+$\Phi(D_i)=j-k+1$. So $a_i=t_i+\Phi(D_i)-\Phi(D_{i-1})=
+(k+1)+(j-k+1)-j=2$. Therefore, the total time is
+$\sum_{i=1}^mt_i\le\sum_{i=1}^ma_i=2m$.
+
+\newpage
+\subsection{Disjoint sets}
+
+\noindent{\em Reading: CLRS 21}
+
+\begin{itemize}
+
+\item Purposes: (1) Use good data structure to achieve algorithm efficiency;
+(2) Use amortization (it's accounting method) to give tight estimation of 
+algorithm complexity.
+
+\item Problem: Initially, we are given $n$ singletons: 
+$S_i=\{i\}$ for $i=1,\ldots,n$. We wish to execute a sequence of
+operations of the following two types: (1) $union(S_i,S_j)$ returns
+$S_i\cup S_j$, where $S_i$ and $S_j$ are disjoint; (2) $find(i)$
+returns the name of the set containing $i$. How can we organize
+the data (sets) such that any sequence of intermixed unions and
+finds can be performed efficiently?
+
+\item Data structure: Set $\Rightarrow$ tree (arbitrary); 
+Set name $\Rightarrow$ root; Sets $\Rightarrow$ forest
+(use parent array).
+
+Initially, there are $n$ singletons, corresponding to $n$
+single-node trees in a forest, which is represented by a
+parent array of size $n$ with $0$ in each entry.
+($parent[i]$ gives the parent of $i$ in the forest.
+If $parent[i]=0$, $i$ is a root.)
+
+Implementation of union (by size): $union(i,j)$ in $O(1)$.
+
+\vskip 0.25cm
+\begin{center}
+\includegraphics[height=1.3in]{f5.pdf}
+\end{center}
+
+Implementation of find (by path compression): $find(i)$ in $O(d)$,
+where $d$ is the depth of $i$ in the tree.
+
+\vskip 0.25cm
+\begin{center}
+\includegraphics[height=1.3in]{f6.pdf}
+\end{center}
+
+\item Complexity: Given an intermixed sequence $\sigma$ of $q$ unions
+and $p$ finds. What is the worst-case time complexity for executing
+$\sigma$ on $\{1\}, \ldots, \{n\}$?
+
+Note: The worst-case analysis gives an overly pessimistic bound of
+$O(q+pn)$ or $O(q+p\log q)$ (by P3 later). We will see next how a tighter bound can be obtained
+by an amortized analysis.
+
+Let $\sigma'$ be $\sigma$ with all finds removed. Let $Forest(\sigma')$
+be the forest resulting from executing $\sigma'$.
+
+Rank $r(i)$: Height (\# of nodes on the longest path from $i$ to 
+a leaf) of the subtree rooted at $i$ in the forest resulting from
+executing $\sigma'$.
+
+Properties:
+
+P1: Any tree has no larger than $q+1$ nodes in $Forest(\sigma')$. (Branches).
+
+P2: Node $i$ has at least $2^{r(i)-1}$ descendants (including $i$)
+in $Forest(\sigma')$. (Induct on $r(i)$. Consider the subtree rooted
+at node $i$, which must be constructed by some union operations. There
+must be a union operation that 
+merges a smaller-size tree with height $r(i)-1$
+to a tree rooted at $i$. Thus the number of nodes in the tree
+obtained after the union is at least $2\cdot 2^{r(i)-2}=2^{r(i)-1}$.)
+
+P3: $r(i)\le \lfloor\log (q+1)\rfloor+1$, for any $i$. 
+(By contradiction, assume $r(i)\ge \lfloor\log (q+1)\rfloor+2$.
+By P2, the number of descendant is at least $2^{\lfloor\log (q+1)\rfloor+1}
+>2^{\log (q+1)}=q+1$. A contradiction to P1.)
+
+P4: There are at most ${n\over 2^{r-1}}$ nodes of rank $r$. 
+(By contradiction, assume for some rank $r$ there are more than 
+${n\over 2^{r-1}}$ nodes with rank $r$. By P2 each node has at least $2^{r-1}$
+descendants. The number of nodes in these (disjoint) subtrees is more than
+${n\over 2^{r-1}}\cdot 2^{r-1}=n$. A contradiction!)
+
+P5: At any time during the execution of $\sigma$, the ranks of the nodes
+on a path from a leaf to a root increase strict monotonically.
+(For nodes $w$ and $v$, if $w$ is a proper descendant of $v$ at some time of executing $\sigma$,
+then they must still have the same descendant-ancester relation in $Forest(\sigma')$. So $r(w)<r(v)$.)
+
+{\em Definitions:} $F(0)=1$ and $F(n)=2^{F(n-1)}$ for $n\ge1$.
+Let $G$ be the inverse of $F$, i.e., $G(n)=\min\{k\ge0|F(k)\ge n\}$.
+Note that $G(F(n))=n$ and $G(n)=\log^* n$.
+
+\begin{center}
+\begin{tabular}{c|c|c}
+$n$ & $F(n)$ & $G(n)$\\\hline
+$0$ & $1$ & $0$\\
+$1$ & $2$ & $0$\\\hline
+$2$ & $4$ & $1$\\\hline
+$3$ & $16$ & $2$\\
+$4$ & $65536$ & $2$\\\hline
+$5$ & $2^{65536}$ & $3$\\
+$\cdots$ & $\cdots$ & $\cdots$\\
+$16$ & $\cdots$ & $3$\\\hline
+$17$ & $\cdots$ & $4$\\
+$\cdots$ & $\cdots$ & $\cdots$\\
+\end{tabular}
+\end{center}
+
+We next partition the ranks into groups by putting rank $r$ into group
+$G(r)$. Thus, group $0$ contains rank $1$; group $1$ contains
+just rank $2$; group $2$ contains ranks $3$ and $4$; and finally
+group $G(\lfloor\log(q+1)\rfloor+1)$ contains the largest possible 
+rank, $\lfloor\log(q+1)\rfloor+1$, according to P3. See the table below.
+
+\begin{center}
+\begin{tabular}{c|l}
+Group & Ranks in the group\\\hline\hline
+$0$ & $1$\\\hline
+$1$ & $2$\\\hline
+$2$ & $3,4$\\\hline
+$3$ & $5,\ldots,16$\\\hline
+$\cdots$ & $\cdots$\\\hline
+$G(\lfloor\log(q+1)\rfloor+1)$ & $\ldots,\lfloor\log(q+1)\rfloor+1$\\
+\hline\hline
+$g$ & $F(g-1)+1,\ldots,F(g)$\\
+\end{tabular}
+\end{center}
+
+What is the total cost of $p$ finds? For $find(i)$, the cost of the
+operation is the depth of $i$, i.e., \# of nodes from $i$ to the root.
+We apportion this cost between the find operation itself and certain
+nodes along the path from $i$ to the root using the following rules.
+Let $j$ be any node on the path from $i$ to the root.
+
+R1: If $j$ is the root, or $parent[j]$ is the root, or $parent[j]$
+is in a different rank group from $j$, assign $1$ unit of cost to the
+find operation.
+
+R2: If $j$ and $parent[j]$ are in the same rank group and
+$parent[j]$ is not the root, assign $1$ unit of cost to $j$.
+
+The figure below contains an example of apportioning cost.
+
+\vskip 0.25cm
+\begin{center}
+\includegraphics[height=2in]{f7.pdf}
+\end{center}
+
+The total cost incurred by $p$ finds is the total cost assigned to
+$p$ finds by R1, denoted $cost(R1)$, plus the total cost assigned to all 
+nodes by R2, denoted $cost(R2)$.
+
+\begin{eqnarray*}
+cost(R1)&\le&p\cdot({\rm max.\ cost\ assigned\ to\ any\ find})\\
+&\le&p\cdot({\rm \#\ of\ different\ rank\ groups}+1)\\
+&\le&p\cdot(G(\lfloor\log(q+1)\rfloor+1)+1+1)\\
+&\le&O(pG(\log q)).
+\end{eqnarray*}
+
+\begin{eqnarray*}
+cost(R2)&=&\sum_{\forall g}{\rm total\ cost\ assigned\ to\ nodes
+\ by\ R2\ in\ group\ }g\\
+&\le&\sum_{\forall g}({\rm \#\ of\ nodes\ in\ group\ }g)\cdot
+({\rm max.\ cost\ assigned\ to\ any\ node\ by\ R2\ in\ group\ }g)\\
+&\le&\sum_{g=0}^{G(\lfloor\log(q+1)\rfloor+1)}N(g)\cdot C_{max}(g)\\
+&\le&\sum_{g=0}^{G(\lfloor\log(q+1)\rfloor+1)}{2n\over F(g)}\cdot F(g)\\
+&=&2n(G(\lfloor\log(q+1)\rfloor+1)+1)\\
+&=&O(nG(\log q)).
+\end{eqnarray*}
+
+What is $N(g)$, \# of nodes in rank group $g$?
+
+\begin{eqnarray*}
+N(g)&\le&\sum_{r=F(g-1)+1}^{F(g)}{n\over 2^{r-1}}\qquad{\rm (By\ P4)}\\
+&\le&{n\over 2^{F(g-1)}}(1+{1\over2}+{1\over4}+\cdots)\\
+&\le&{2n\over F(g)}.
+\end{eqnarray*}
+
+What is $C_{max}(g)$, max. cost assigned to any node by R2 in rank group $g$?
+
+Assume for node $i$, its $r(i)$ is in group $g$. So $F(g-1)+1\le r(i)\le F(g)$.
+Recall that there are $F(g)-F(g-1)$ ranks in group $g$.
+Every time $i$ is assigned $1$ unit of cost by R2, $i$ is 
+reconnected to a new parent with a higher rank than its previous parent
+(by P5). Node $i$ will be assigned and moved at most $F(g)-F(g-1)$
+times until it is connected to a parent in a different rank group 
+or to the root. So $C_{max}(g)\le F(g)-F(g-1)\le F(g)$.
+
+The total cost for executing $\sigma$ is the sum of 
+(1) $O(q)$ for $q$ unions; and
+(2) $O(pG(\log q))+O(nG(\log q))$ for $p$ finds.
+So the total is $O(q+pG(\log q)+nG(\log q))$, almost a linear
+function since $G(\cdot)$ is close to a constant function.
+
+\end{itemize}
+
+\newpage
+
+\section{Greedy Algorithms}
+
+\subsection{Introduction}
+
+\noindent{\em Reading: CLRS 16.2}
+
+\begin{itemize}
+\item Making change: How to pay $x$ to a customer using the smallest
+possible number of coins, given the coinage, $c_1<c_2<\cdots<c_n$,
+and a unlimited supply of coins of each denomination?
+
+A greedy algorithm: Starting with nothing, at every stage we add to
+the coins already chosen a coin of the largest value available that does 
+not take us past the amount to be paid. 
+
+Consider the American coinage. If $x=94$, then the change includes
+$3$ quarters, $1$ dime, and $1$ nickel and $4$ pennies. A proof, though
+surprisingly hard, exists that the proposed greedy algorithm always
+gives the optimal (minimum) solution for the American coinage.
+
+The algorithm may not be optimal for other coinages. For example,
+let $c_1=1$, $c_2=9$, and $c_3=15$. Assume $x=19$. The greedy algorithm
+gives a solution with $5$ coins. However, the optimal solution has
+only $3$ coins.
+
+\item Greedy algorithms are suitable for solving optimization
+problems with solutions consisting of a sequence of choices.
+
+Greedy algorithms makes the choice that looks the best at the
+moment (short-sighted), and never changes the choices made
+(stubborn). So they may not always give optimal solutions.
+
+$Greedy$($C$: set) //$C$ is the set of all choices
+\par\qquad $S\leftarrow\emptyset$ //$S$ is the solution set
+\par\qquad while $S$ is not a solution and $C\not=\emptyset$
+\par\qquad\qquad $x\leftarrow$ an element in $C$ that optimizes $Select(x)$
+//You pick $Select(x)$ in advance
+\par\qquad\qquad $C\leftarrow C-\{x\}$
+\par\qquad\qquad if $S\cup\{x\}$ is a feasible solution
+then $S\leftarrow S\cup\{x\}$
+\par\qquad if $S$ is a solution then return S
+\par\qquad else return ``No solution found''
+
+\item Examples of greedy algorithms:
+
+Kruskal's algorithm for finding the minimum spanning tree of an
+undirected edge-weighted graph.
+
+Dijkstra's algorithm for finding the shortest paths from a source
+node to all other nodes in a directed, edge-weighted graph.
+
+Heuristics for the knapsack problem.
+
+Heuristics for the bin packing problem.
+
+\end{itemize}
+
+\subsection{An activity-selection problem}
+
+\noindent{\em Reading: CLRS 16.1}
+
+\begin{itemize}
+
+\item Activity $i$ has starting time $s_i$ and finishing time $f_i$,
+with $s_i<f_i$. We say activities $i$ and $j$ are compatible
+if $f_i\le s_j$ or $f_j\le s_i$. Given $S=\{1,2,\ldots,n\}$,
+a set of proposed activities that wish to use a resource $R$
+which can only be used by one activity at a time. Determine
+$S'\subseteq S$ with the maximum size such that any two
+activities in $S'$ are compatible.
+
+\item Greedy algorithm 1: Shortest activity first (SAF).
+
+An instance that shows that SAF is not optimal.
+
+\begin{center}
+\begin{tabular}{c|cc|c}
+$i$ & $s_i$ & $f_i$ & $f_i-s_i$\\\hline
+$1$ & $0$ & $3$ & $3$\\
+$2$ & $3$ & $6$ & $3$\\
+$3$ & $2$ & $4$ & $2$\\
+\end{tabular}
+\end{center}
+
+\item Greedy algorithm 2: Earliest starting activity first (ESAF).
+
+An instance that shows that ESAF is not optimal.
+
+\begin{center}
+\begin{tabular}{c|cc}
+$i$ & $s_i$ & $f_i$\\\hline
+$1$ & $1$ & $3$\\
+$2$ & $0$ & $5$\\
+$3$ & $4$ & $6$\\
+\end{tabular}
+\end{center}
+
+\item Greedy algorithm 3: Earliest finishing activity first (EFAF).
+
+{\em Theorem:} EFAF is optimal.
+
+{\em Proof} When multiple optimal solutions exist for some inputs,
+we may use "prove by transformation" to prove optimality of a greedy
+algorithm. 
+Take any optimal schedule, assume that it is different from the greedy
+schedule.
+We wish to prove that the OPT schedule can be transformed
+to an EFAF schedule of the same number of activities. We use
+the following procedure to do the transformation.
+
+\qquad $S\leftarrow\{1,2,\ldots,n\}$
+\par\qquad $OPT\leftarrow\{a_1,a_2,\ldots,a_l\}$
+\par\qquad for $i\leftarrow 1$ to $l$
+\par\qquad\qquad if $\exists j\in S-OPT$ such that $f_j=\min_{k\in S-OPT}
+\{f_k\}$, $f_j<f_{a_i}$, and $s_j\ge f_p$, 
+\par\qquad\qquad\qquad where $p$ is the immediate
+predecessor of $a_i$ in the current $OPT$
+\par\qquad\qquad then replace $a_i$ with $j$ in $OPT$, i.e.,
+$OPT\leftarrow OPT-\{a_i\}\cup\{j\}$
+
+By applying the above procedure to the OPT schedule, the
+resulting schedule is an EFAF schedule, with the same number
+of activities as in the OPT schedule. So EFAF is optimal.
+
+Note: When the optimal solution for any input is unique,
+we may use "prove by contradiction" to prove optimality.
+Again, assume that the optimal solution is different from the
+greedy solution. Then show that by making some change to the optimal
+solution there is a better solution than the optimal. Thus, a contradiction.
+
+\end{itemize}
+
+\subsection{Scheduling with deadlines}
+
+\noindent{\em Reading: CLRS 16.5}
+
+\begin{itemize}
+
+\item Given a single machine and $n$ unit-time jobs, $J_1,\ldots,J_n$.
+Assume that $J_j$ has deadline $d_j$ (integer) and penalty $p_j$
+(integer) which occurs when the deadline is missed.
+How can we schedule the jobs on the machine so that the total 
+penalty is minimized?
+
+\item A greedy algorithm: Schedule jobs with the largest penalty in the
+latest possible time slot.
+
+For the following instance, the greedy algorithm defines a schedule
+$J_4,J_2,J_3,J_1,J_7,J_6,J_5$ with total penalty of $50$.
+
+\begin{center}
+\begin{tabular}{c|ccccccc}
+$J_j$ & $J_1$ & $J_2$ & $J_3$ & $J_4$ & $J_5$ & $J_6$ & $J_7$\\\hline
+$d_j$ & $4$ & $2$ & $4$ & $3$ & $1$ & $4$ & $6$\\
+$p_j$ & $70$ & $60$ & $50$ & $40$ & $30$ & $20$ & $10$\\
+\end{tabular}
+\end{center}
+
+The following pseudocode describes the algorithm:
+
+\qquad WLOG, assume $p_1\ge p_2\ge\cdots\ge p_n$.
+\par\qquad $P\leftarrow 0$ //total penalty so far
+\par\qquad for $i\leftarrow 1$ to $n$ $S[i]\leftarrow 0$ //S is the schedule
+\par\qquad for $j\leftarrow 1$ to $n$
+\par\qquad\qquad if $\exists k$ such that $S[k]=0$ and $k\le d_j$
+\par\qquad\qquad then $i\leftarrow\max\{k|S[k]=0{\rm \ and\ }k\le d_j\}$
+\par\qquad\qquad else $i\leftarrow\max\{k|S[k]=0\}$
+\par\qquad\qquad\qquad $P\leftarrow P+p_j$
+\par\qquad\qquad $S[i]\leftarrow j$
+
+The worst-case time complexity of the greedy algorithm is $\Theta(n^2)$.
+
+\item Proof of optimality
+
+Assume that the optimal schedule looks different
+from the greedy schedule. We wish to prove that the former can be
+transformed to the latter without changing the total penalty. 
+We use $c_j$ to denote the completion time of $J_j$ in the current schedule,
+which is initially the optimal schedule.
+Assume $p_1\ge p_2\ge\cdots\ge p_n$. For any $J_j$, it is either
+an early job or a late job in the current schedule.
+Consider the following procedure:
+
+\qquad for $j\leftarrow 1$ to $n$
+\par\qquad\qquad if $J_j$ is an early job in the current schedule
+($c_j\le d_j$)
+\par\qquad\qquad then $T\leftarrow\{J_i|J_i\in [c_j,d_j]{\rm\ and\ }
+i>j\}$
+\par\qquad\qquad\qquad if $T\not=\emptyset$
+\par\qquad\qquad\qquad then let $J_i$ be the job in $T$ with the largest $c_i$
+\par\qquad\qquad\qquad\qquad swap $J_i$ and $J_j$  //step 1
+\par\qquad\qquad else //$J_j$ is a late job ($c_j>d_j$)
+\par\qquad\qquad\qquad let $J_i$ be the latest scheduled job with 
+$i>j$
+\par\qquad\qquad\qquad swap $J_i$ and $J_j$  //step 2 
+
+Step 1 does not increase the total penalty. This is because
+after the swap $J_j$ remains to be an early job and $J_i$
+is moved to an earlier slot. Step 2 also does not increase the
+total penalty since $J_j$ remains to be a late job and $J_i$
+is moved to an earlier slot. So after applying the above
+procedure, the optimal schedule is transformed to a greedy
+schedule while the total penalty is not increased. Since 
+it is impossible to have a decreased total penalty, we have
+a greedy schedule with the same total penalty as the optimal
+schedule. Therefore, the greedy schedule is optimal.
+ 
+\end{itemize}
+
+\newpage
+
+\section{Divide and Conquer}
+
+\subsection{Introduction}
+
+\noindent{\em Reading: CLRS 2.3}
+
+\begin{itemize}
+
+\item A general template:
+
+\vskip 0.25cm
+\begin{center}
+\includegraphics[height=1.5in]{f8.pdf}
+\end{center}
+
+function $D\&C(x)$
+
+\qquad if $x$ is small and or simple then return $adhoc(x)$
+
+\qquad decompose $x$ into smaller instances $x_1,\ldots,x_k$ //$k\ge1$
+
+\qquad for $i\leftarrow 1$ to $k$ $y_i\leftarrow D\&C(x_i)$
+
+\qquad combine the $y_i$'s to obtain a solution $y$ for $x$
+
+\qquad return $y$
+
+{\em Remarks:} 
+
+\begin{itemize}
+\item Relations between $x$ and $x_1,\ldots,x_k$,
+$y_1,\ldots,y_k$ and $y$; 
+
+\item Time complexity $T(n)=\sum_{i=1}^k
+T(n_i)+D(n)+C(n)$, where $D(n)$ and $C(n)$ are time for step 1 and
+step 3, respectively; 
+
+\item Trade-off between $D(n)$ and $C(n)$;
+
+\item The time complexity requirement gives information on step 1
+and step 3.
+\end{itemize}
+
+\begin{center}
+\begin{tabular}{c|c}
+$O(\log n)$ & $T(n)=T({n\over 2})+1$\\\hline
+$O(n)$ & $T(n)=2T({n\over2})+1$ or $T({n\over2})+n$\\\hline
+$O(n\log n)$ & $T(n)=2T({n\over2})+n$ or $T({n\over2})+n\log n$\\\hline
+$O(n^2)$ & $T(n)=4T({n\over2})+n$ or $2T({n\over2})+n^2$
+\end{tabular}
+\end{center}
+ 
+\item Examples of D\&C algorithms:
+
+Binary search: $T(n)=T({n\over2})+O(1)$ $\Rightarrow$ $T(n)=O(\log n)$.
+
+Merge sort: $T(n)=2T({n\over2})+O(n)$ $\Rightarrow$ $T(n)=O(n\log n)$,
+where $D(n)=O(1)$ and $C(n)=O(n)$.
+
+Quick sort (best case): $T(n)=2T({n\over2})+O(n)$ $\Rightarrow$ 
+$T(n)=O(n\log n)$,
+where $D(n)=O(n)$ and $C(n)=O(1)$.
+ 
+Integer multiplication: $T(n)=3T({n\over2})+O(n)$ $\Rightarrow$
+$T(n)=O(n^{\log 3})=O(n^{1.585})$, where $D(n)=O(n)$ and
+$C(n)=O(n)$.
+
+\end{itemize}
+
+\subsection{Matrix multiplication}
+
+\noindent{\em Reading: CLRS 28.2}
+
+\begin{itemize}
+
+\item Consider the multiplication of two $n\times n$ matrices.
+Using the definition of matrix multiplication, we need $\Theta(n^3)$.
+To use any divide-and-conquer idea, we have to first divide a matrix
+into several smaller matrices. Let $A_{n\times n}$ and $B_{n\times n}$
+be the two matrices. Let $C_{n\times n}=A_{n\times n}\cdot B_{n\times n}$.
+
+$$A_{n\times n}=\left ( \begin{array}{cc}
+A_{11} & A_{12}\\
+A_{21} & A_{22}\\
+\end{array} \right),\hskip 0.5in
+B_{n\times n}=\left ( \begin{array}{cc}
+B_{11} & B_{12}\\
+B_{21} & B_{22}\\
+\end{array} \right),\hskip 0.5in
+C_{n\times n}=\left ( \begin{array}{cc}
+C_{11} & C_{12}\\
+C_{21} & C_{22}\\
+\end{array} \right)$$
+
+Then $C_{11}=A_{11}B_{11}+A_{12}B_{21}$, $C_{12}=A_{11}B_{12}+A_{12}B_{22}$,
+$C_{21}=A_{21}B_{11}+A_{22}B_{21}$, and $C_{22}=A_{21}B_{12}+A_{22}B_{22}$.
+So the multiplication of two $n\times n$ matrices becomes eight multiplications
+of two ${n\over2}\times{n\over2}$ matrices, giving us $T(n)=8T({n\over2})+
+\Theta(n^2)$. So $T(n)=\Theta(n^3)$ by master theorem. No improvement!
+
+\item In the late sixties, Strassen reduced eight multiplications to seven.
+
+\begin{center}
+\begin{tabular}{l|l}
+$M_1$ & $(A_{12}-A_{22})(B_{21}+B_{22})$\\\hline
+$M_2$ & $(A_{11}+A_{22})(B_{11}+B_{22})$\\\hline
+$M_3$ & $(A_{11}-A_{21})(B_{11}+B_{12})$\\\hline
+$M_4$ & $(A_{11}+A_{12})B_{22}$\\\hline
+$M_5$ & $A_{11}(B_{12}-B_{22})$\\\hline
+$M_6$ & $A_{22}(B_{21}-B_{11})$\\\hline
+$M_7$ & $(A_{21}+A_{22})B_{11}$
+\end{tabular}
+\hskip 0.5in
+\begin{tabular}{l|l}
+$C_{11}$ & $M_1+M_2-M_4+M_6$\\\hline
+$C_{12}$ & $M_4+M_5$\\\hline
+$C_{21}$ & $M_6+M_7$\\\hline
+$C_{22}$ & $M_2-M_3+M_5-M_7$\\
+\end{tabular}
+\end{center}
+
+Using the above idea in the divide-and-conquer algorithm,
+we get $T(n)=7T({n\over2})+\Theta(n^2)$, thus $T(n)=\Theta(n^{\log 7})
+=\Theta(n^{2.81})$ by master theorem.
+
+\item In the late seventies, the matrix multiplication algorithm is
+improved to $\Theta(n^{2.61})$ by Pan. In the late eighties,
+the algorithm is improved to $\Theta(n^{2.376})$. There is still
+a substantial gap to the $\Omega(n^2)$ lower bound.
+
+\end{itemize}
+
+\subsection{Finding the $k$th smallest}
+
+\noindent{\em Reading: CLRS 8.2 and 8.3}
+
+\begin{itemize}
+
+\item Given a list of $n$ numbers, find the $k$th smallest number
+among them.
+
+\item First try: Sort the list in increasing order ($\Theta(n\log n)$)
+and locate the $k$th element ($\Theta(1)$).
+
+\item Second try: Similar to Quick Sort.
+ 
+Function $Select(L,k)$
+
+\qquad if $|L|<50$
+
+\qquad then sort $L$ and return the $k$th
+
+\qquad else choose any $p\in L$ as a pivot
+
+\qquad\qquad $L_1=\{a_i\in L|a_i<p\}$
+
+\qquad\qquad $L_2=\{a_i\in L|a_i=p\}$
+
+\qquad\qquad $L_3=\{a_i\in L|a_i>p\}$
+
+\qquad\qquad if $k\le |L_1|$ then return $Select(L_1,k)$
+
+\qquad\qquad else if $k\le |L_1|+|L_2|$
+
+\qquad\qquad\qquad then return $p$
+
+\qquad\qquad\qquad else return $Select(L_3,k-|L_1|-|L_2|)$
+
+Like Quick Sort, the time complexity of this algorithm heavily
+depends on the selection of the pivot in each recursion.
+If every time $p$ happens to partition $L$ evenly, then the
+time complexity is $\Theta(n)$. However, if the partition is
+extremely uneven, the time complexity degrades to $\Theta(n^2)$.
+Therefore, the worst-case time of the algorithm is $\Theta(n^2)$.
+
+\item Third try: Choose the pivot cleverly. Replace
+``choose any $p\in L$ as a pivot'' in the above algorithm by the
+following code:
+
+\qquad\qquad divide $L$ into $\lfloor {|L|\over5}\rfloor$
+sublists of (up to) $5$ elements each
+
+\qquad\qquad sort each sublist into increasing order
+
+\qquad\qquad let $M$ be the list of medians of all sublists
+
+\qquad\qquad $p\leftarrow Select(M, \lceil {|M|\over2}\rceil)$
+
+From the illustration below, there will be at most ${3\over4}|L|$
+elements in $L_1$ and at most ${3\over4}|L|$ elements in $L_3$.
+Therefore, $T(n)\le O(1)$ for $n\le49$ and 
+$T(n)\le T({n\over5})+T({3n\over4})+O(n)$ for $n\ge 50$. By induction,
+$T(n)=O(n)$. Since $\Omega(n)$ is obvious a lower bound, this
+D\&C algorithm is optimal.
+
+\vskip 0.25cm
+\begin{center}
+\includegraphics[height=1.5in]{f9.pdf}
+\end{center}
+
+\item Theorem: Let $T(n)\le cn$ for $n\le 49$ and $T(n)\le
+T({n\over5})+T({3n\over4})+cn$ for $n\ge 50$. Show that
+$T(n)\le 20cn$.
+
+{\em Proof}\quad Induct on $n$. When $n\le 49$,
+$T(n)\le cn\le 20cn$. Assume that $T(i)\le 20ci$ for $i\le n-1$.
+Now consider $T(n)$.
+\begin{eqnarray*}
+T(n)&\le&T({n\over5})+T({3n\over4})+cn\\
+&\le&20c{n\over5}+20c{3n\over4}+cn\\
+&=&4cn+15cn+cn\\
+&=&20cn
+\end{eqnarray*}
+
+\end{itemize}
+
+\subsection{Exchanging two sections of an array}
+
+\begin{itemize}
+
+\item Given an array $A$ of $n$ items. How can one exchange the first
+$k$ items with the last $n-k$ items?
+
+\item A naive solution: copy the first $k$ elements to an auxiliary
+array $B$; move the last $n-k$ elements to the first $n-k$ positions
+of $A$; and copy the $k$ elements in $B$ back to the last $k$ positions
+of $A$.
+
+\item Assume only $\Theta(1)$ auxiliary memory is available. If the two sections have
+the same length, it is easy. For example, $A=(a,b,c,d,e,f)$ and $k=3$.
+We can exchange the sections by using just one additional variable:
+swap $a,d$, swap $b,e$, and swap $c,f$.
+
+\item A D\&C idea: Let $k=3$. $(a,b,c,d,e,f,g,h,i,j,k)\rightarrow
+(d,e,f,g,h,i,j,k,a,b,c)$
+ 
+\vskip 0.25cm
+\begin{center}
+\includegraphics[height=1.8in]{f10.pdf}
+\end{center}
+
+\item Algorithm: 
+
+$Swap(i,j,m)$ // Assume $i+m\le j$
+
+\qquad for $p\leftarrow 0 $ to $m-1$
+
+\qquad\qquad swap $A[i+p]$ and $A[j+p]$
+
+$Exchange(i,j,l,m)$ // Assume $i+l\le j$
+
+\qquad if $l=m$ $Swap(i,j,l)$
+
+\qquad else if $l<m$
+
+\qquad\qquad\qquad $Swap(i,j+m-l,l)$
+
+\qquad\qquad\qquad $Exchange(i,j,l,m-l)$
+
+\qquad\qquad else
+
+\qquad\qquad\qquad $Swap(i,j,m)$
+
+\qquad\qquad\qquad $Exchange(i+m,j,l-m,m)$
+
+\vskip 0.25cm
+\begin{center}
+\includegraphics[height=1.5in]{f11.pdf}
+\end{center}
+
+\item Time complexity: Let $T(l,m)$ be the number of single swaps.
+If $l=m$, $T(l,m)=l$; if $l<m$, $T(l,m)=l+T(l,m-l)$; and
+if $l>m$, $T(l,m)=m+T(l-m,m)$.
+
+Prove by induction that $T(l,m)=l+m-gcd(l,m)$.
+
+Induct on $l+m$ (assuming $l,m>0$). When $l+m=2$, $l=m=1$.
+So $T(l,m)=T(1,1)=1$ by definition. On the other hand, 
+$l+m-gcd(l,m)=2-gcd(1,1)=1$. So the claim holds. In the
+inductive hypothesis, assume that for $l'+m'<l+m$,
+$T(l',m')=l'+m'-gcd(l',m')$. Now consider the case of 
+$l+m$. If $l=m$, $T(l,m)=l=2l-l=l+m-gcd(l,m)$. If $l<m$,
+$T(l,m)=l+T(l,m-l)=l+(l+m-l)-gcd(l,m-l)=l+m-gcd(l,m-l)
+=l+m-gcd(l,m)$. If $l>m$, $T(l,m)=m+T(l-m,m)=m+(l-m+m)-gcd(l-m,m)
+=l+m-gcd(l,m)$.
+
+\item $Exchange(1,k+1,k,n-k)$ solves the problem in time
+$T(k,n-k)=n-gcd(k,n)$.
+
+\end{itemize}
+
+\subsection{Computing exponentiation}
+
+\begin{itemize}
+
+\item Idea:
+
+$$a^n=\left\{\begin{array}{ll}
+a & \mbox{if $n=1$}\\
+(a^{n\over2})^2 & \mbox{if $n$ is even}\\
+a\times a^{n-1} & \mbox{otherwise}
+\end{array}\right.$$
+
+For example, $a^{29}=aa^{28}=a(a^{14})^2=a((a^7)^2)^2=\cdots=
+a((a(a(a)^2)^2)^2)^2$.
+It takes a total of seven multiplications.
+
+For simplicity, we call this algorithm $expodac(a,n)$.
+
+\item Time complexity analysis:
+
+Let $N(n)$ be the number of multiplications in $expodac(a,n)$.
+
+$$N(n)=\left\{\begin{array}{ll}
+0 & \mbox{if $n=1$}\\
+N({n\over2})+1 & \mbox{if $n$ is even}\\
+N(n-1)+1 & \mbox{otherwise}
+\end{array}\right.$$
+
+When $n>1$ is odd, $N(n)=N(n-1)+1=N({n-1\over2})+2=N(\lfloor{n\over2}
+\rfloor)+2$. When $n$ is even, $N(n)=N({n\over2})+1=N(\lfloor{n\over2}
+\rfloor)+1$. Therefore, $N(\lfloor{n\over2}\rfloor)+1\le N(n)\le
+N(\lfloor{n\over2}\rfloor)+2$. Define two functions $N_i$ for
+$i=1,2$ as follows.
+
+$$N_i(n)=\left\{\begin{array}{ll}
+0 & \mbox{if $n=1$}\\
+N_i(\lfloor{n\over2}\rfloor)+i & \mbox{otherwise}
+\end{array}\right.$$
+
+It is easy to prove that $N_1(n)\le N(n)\le N_2(n)$. Since
+$N_1(n)=\Theta(\log n)$ and $N_2(n)=\Theta(\log n)$, then
+$N(n)=\Theta(\log n)$.
+
+Now, if each integer multiplication can be done in constant time, 
+the time complexity of $expodac(a,n)$ is $\Theta(\log n)$. But
+what if the integers involved are so large that a multiplication
+can not be completed in constant time?
+Let $M(p,q)$ be the time needed to multiply two integers of
+sizes $p$ and $q$ (the numbers of figures). 
+Let $T(p,n)$ be the time complexity of $expodac(a,n)$,
+where $p$ is the size of $a$.
+
+Theorem/Exercise: The size of $a^i$ is at least $i(p-1)$ but at most $ip$.
+
+Inspection of $expodac(a,n)$ yields the following definition of $T(p,n)$.
+
+$$T(p,n)\le\left\{\begin{array}{ll}
+0 & \mbox{if $n=1$}\\
+T(p,{n\over2})+M({pn\over2},{pn\over2}) & \mbox{if $n$ is even}\\
+T(p,n-1)+M(p,p(n-1)) & \mbox{otherwise}
+\end{array}\right.$$
+
+If $n>1$ is odd, $T(p,n)\le T(p,n-1)+M(p,p(n-1))\le
+T(p,{n-1\over2})+M({p(n-1)\over2},{p(n-1)\over2})+M(p,p(n-1))
+=T(p,\lfloor{n\over2}\rfloor)+M(p\lfloor{n\over2}\rfloor,
+p\lfloor{n\over2}\rfloor)+M(p,p(n-1))$. If $n$ is even,
+$T(p,n)=T(p,{n\over2})+M({pn\over2},{pn\over2})
+\le T(p,\lfloor{n\over2}\rfloor)+M(p\lfloor{n\over2}\rfloor,
+p\lfloor{n\over2}\rfloor)+M(p,p(n-1))$. So in both cases,
+
+$$T(p,n)\le T(p,\lfloor{n\over2}\rfloor)+M(p\lfloor{n\over2}\rfloor,
+p\lfloor{n\over2}\rfloor)+M(p,p(n-1)).$$
+
+In general, $M(p,q)=\Theta(qp^{\alpha-1})$ where $p\le q$ and
+$\alpha=2$ in the classic integer multiplication algorithm and $\alpha=\log 3$ in the
+divide-and-conquer algorithm. So $M(p\lfloor{n\over2}\rfloor,
+p\lfloor{n\over2}\rfloor)=\Theta((p\lfloor{n\over2}\rfloor)^{\alpha})$
+and $M(p,p(n-1))=\Theta(p^{\alpha}(n-1))$. So,
+
+$$T(p,n)\le T(p,\lfloor{n\over2}\rfloor)+\Theta(p^{\alpha}n^{\alpha}).$$
+
+By the iteration method or the master method, we have
+$T(p,n)\le \Theta(p^{\alpha}n^{\alpha})$, thus
+$T(p,n)=O(p^{\alpha}n^{\alpha})$.
+
+On the other hand, consider the last or the next to last multiplication
+in $expodac(a,n)$, depending on whether $n$ is even or odd. It involves
+squaring $a^{\lfloor{n\over2}\rfloor}$, which is of size at least
+$(p-1)\lfloor{n\over2}\rfloor$. So,
+
+$$T(p,n)\ge M((p-1)\lfloor{n\over2}\rfloor,(p-1)\lfloor{n\over2}\rfloor).$$
+
+Since $M((p-1)\lfloor{n\over2}\rfloor,(p-1)\lfloor{n\over2}\rfloor)
+=\Theta(((p-1)\lfloor{n\over2}\rfloor)^{\alpha})$, so
+$T(p,n)\ge\Theta(p^{\alpha}n^{\alpha})$, thus
+$T(p,n)=\Omega(p^{\alpha}n^{\alpha})$.
+
+Combining the two bounds, we have $T(p,n)=\Theta(p^{\alpha}n^{\alpha})$,
+where $\alpha=2$ if the classic algorithm is used and $\alpha=\log 3$
+if the divide-and-conquer algorithm is used.
+
+\end{itemize}
+
+\subsection{The closest-pair problem}
+
+\noindent{\em Reading: CLRS 33.4 }
+
+\begin{itemize}
+
+\item Problem:
+
+Given $n$ 2D points, find the two closest points.
+
+{\em Remarks:}
+\begin{itemize}
+\item Input is $(x_1,y_1),\ldots,(x_n,y_n)$ and output is
+$(x_i,y_i),(x_j,y_j)$.
+\item The distance between $p_1=(x_1,y_1)$ and $p_2=(x_2,y_2)$ is
+$|p_1p_2|=\sqrt{(x_1-x_2)^2+(y_1-y_2)^2}$.
+\item A brute-force algorithm: ${n\choose2}=O(n^2)$.
+\end{itemize}
+
+\item  A divide-and-conquer algorithm:
+
+Let $X$ be point set $P$ sorted by increasing $x$ and
+$Y$ be point set $P$ sorted by increasing $y$.
+
+\begin{enumerate}
+
+\item Divide: Use a vertical line $l$ to bisect $P$ into $P_L$ and $P_R$.
+$X$ and $Y$ are thus correspondingly partitioned into $X_L$ and $X_R$,
+$Y_L$ and $Y_R$.
+
+\item Conquer: Use two recursive calls to find the closest pairs in
+$P_L$ and $P_R$. Let $\delta_L$ ($\delta_R$) be the distance between the
+two closest points in $P_L$ ($P_R$). Define $\delta=\min\{\delta_L,
+\delta_R\}$.
+
+\item Merge: Find the closest pair in $P$. It can be the pair
+with distance $\delta$ found in the previous step, or a pair
+with one point in $P_L$ and the other in $P_R$ with a distance
+less than $\delta$.
+
+\end{enumerate}
+
+\item Time complexity: $T(n)=T_P(n)+T_{DAC}(n)$.
+
+\begin{itemize}
+\item Preprocessing:
+Sort $P$ twice to construct $X$ and $Y$. $\Rightarrow$ $O(n\log n)$
+\item Divide: Use the median in $X$ to create the partition of $P$
+into $P_L$ and $P_R$. Construct the partition of $X$ into $X_L$
+and $X_R$. (This is easy.) Construct the partition of $Y$ into
+$Y_L$ and $Y_R$. (This can be tricky.) All of the above must be
+done in linear time. To check whether you have the right partitions,
+are $P_L$, $X_L$, and $Y_L$ the same point set, and are $P_R$,
+$X_R$, and $Y_R$ the same point set? $\Rightarrow$ $O(n)$
+\item Conquer:
+Two recursive calls on point sets of size $n\over2$. $\Rightarrow$
+$2T_{DAC}({n\over2})$
+\item Merge: Many technical details to fill in. We wish to spend
+only linear time
+for the merge. Can we achieve this goal? $\Rightarrow$ $O(n)$
+\end{itemize}
+
+So $T_{DAC}(n)=2T_{DAC}({n\over2})+O(n)=O(n\log n)$.
+Overall, $T(n)=T_P(n)+T_{DAC}(n)=O(n\log n)+O(n\log n)=O(n\log n)$.
+
+\item Merge in linear time:
+
+Assume that
+\begin{itemize}
+\item $P\Rightarrow P_L,P_R$, $X\Rightarrow X_L,X_R$,
+$Y\Rightarrow Y_L,Y_R$ by the vertical line $l$.
+\item $\delta_L$ is the distance between the closest points in
+$P_L$ and $\delta_R$ is the distance between the closest points
+in $P_R$.
+\item $\delta=\min\{\delta_L,\delta_R\}$.
+\end{itemize}
+
+Goal: Determine if there are two points, one in $P_L$ and the other
+in $P_R$, with distance less than $\delta$.
+
+An exhaustive search checks all pairs and may take $O(n^2)$.
+Can we just check $O(n)$ pairs and not miss any one with distance
+less than $\delta$? Yes and here is why.
+
+Define a strip centered at $l$ with width $2\delta$. Let $P_S$ be
+the set of points in the strip and $Y_S$ be $P_S$ sorted by $y$.
+(Remember our linear time restriction: Can you create $P_S$ and $Y_S$
+in linear time?)
+
+Claim: If there are points $p\in P_L$ and $q\in P_R$ with $|pq|<\delta$,
+then $p$ and $q$ must be in the strip.
+
+Pause: Can we check out all pairs in $P_S$ to determine the one with
+the smallest distance?
+
+For each $p\in Y_S$, define a rectangle $R(p)$ of height $\delta$
+and width $2\delta$, with the bottom edge of the rectangle passing $p$.
+
+Claim: If there are $p$ and $q$ with $|pq|<\delta$ and $q.y\ge p.y$,
+$q$ must be in $R(p)$.
+
+Claim: There can be at most eight points in each $R(p)$.
+
+Why? Divide $R(p)$ ($\delta\times2\delta$) into eight
+${\delta\over2}\times{\delta\over2}$ squares. In each square,
+if there are two or more points, say $q_1$ and $q_2$, then
+$$|q_1q_2|\le{\rm diagonal\ of\ the\ square}={\sqrt 2}{\delta\over2}
+<\delta,$$
+which is impossible since $q_1$ and $q_2$ are on the same side of the
+vertical line $l$. So there can be at most one point in each square,
+with a total of eight points in $R(p)$.
+
+Claim: For any $p\in Y_S$, if there is $q$ such that $|pq|<\delta$,
+then $q$ must be one of the seven points following $p$ in $Y_S$.
+
+Algorithm for merge:
+
+\begin{verbatim}
+m = |Ys|
+mindist = |Ys[0]Ys[1]|
+p = Ys[0]
+q = Ys[1]
+for i = 1 to m-1
+  k = min {i + 7, m}
+  for j = i + 1 to k
+    dist = |Ys[i]Ys[j]|
+    if dist < mindist
+      mindist = dist
+      p = Ys[i]
+      q = Ys[j]
+If mindist < delta
+  return p and q as the closest points
+else return the closest points found by
+     the recursive calls
+\end{verbatim}
+
+\end{itemize}
+
+\newpage
+
+\section{Dynamic Programming}
+
+\subsection{Introduction}
+
+\noindent{\em Reading: CLRS 15.3}
+
+\begin{itemize}
+
+\item Divide-and-conquer algorithms are implemented by recursion. Its
+design is top-down, and it is efficient when the subproblems
+don't overlap. However, when subproblems do overlap (share
+sub-subproblems), recursion does redundant work. In this case,
+a tabular method is often used. It is nonrecursive and bottom-up. 
+It is called dynamic programming.
+
+\item An example: Fibonacci numbers:
+
+$fib1(n)$
+
+\qquad if $n<2$ return $n$
+
+\qquad else return $fib1(n-1)+fib1(n-2)$
+
+We can see that this recursive (divide-and-conquer) algorithm is
+not efficient. To compute $fib1(n)$, the algorithm computes
+$fib1(n-1)$ and $fib1(n-2)$ separately. To compute $fib1(n-1)$,
+the values of $fib1(n-2)$ and $fib1(n-3)$ are needed. To compute
+$fib1(n-2)$, the values of $fib1(n-3)$ and $fib1(n-4)$ are needed.
+We observe that subproblems $fib1(n-1)$ and $fib(n-2)$ share
+sub-subproblem. 
+
+The time complexity $T(n)\ge T(n-1)+T(n-2)$. So $T(n)$ is larger than
+the $n$th Fibonacci number. So $T(n)\ge {1\over\sqrt5}
+(({1+\sqrt5\over2})^n-(-{1+\sqrt5\over2})^{-n})=\Theta({1.618}^n)$.
+
+We can use the dynamic programming method by building a
+1-D table as below and returning the $n$th entry of the table.
+
+\begin{center}
+\begin{tabular}{c|ccccccc}
+$k$ & $0$ & $1$ & $2$ & $3$ & $4$ & $\cdots$ & $n$\\\hline
+$f_k$ & $0$ & $1$ & $1$ & $2$ & $3$ & $\cdots$ & $f_n$\\
+\end{tabular}
+\end{center}
+
+$fib2(n)$
+
+\qquad if $n<2$ return $n$
+
+\qquad else $i\leftarrow 0$
+
+\qquad\qquad $j\leftarrow 1$
+
+\qquad\qquad for $k\leftarrow 2$ to $n$ 
+
+\qquad\qquad\qquad $f\leftarrow i+j$
+
+\qquad\qquad\qquad $i\leftarrow j$
+
+\qquad\qquad\qquad $j\leftarrow f$
+
+\qquad\qquad return $f$
+
+The time complexity is obviously $O(n)$.
+
+To summarize, to use dynamic programming, first define
+a function $F$ recursively (so that the solution information
+is embedded in $F(n)$): $F(n)=G(F(n_1), F(n_2), \ldots, F(n_k))$
+for $n_1,n_2,\ldots,n_k<n$. Construct a table to compute nonrecursively
+$F(n_1), F(n_2),\ldots,F(n_k)$, hence $F(n)$.
+
+\end{itemize}
+
+\subsection{Traveling salesman problem (TSP)}
+
+\begin{itemize}
+
+\item Given a edge-weighted graph $G=(V,E)$. Find a tour (a cycle that
+passes through each vertex exactly once) with the minimum total
+weight. 
+
+\item Assume $V=\{1,2,\ldots,n\}$. Let $S\subseteq
+\{2,3,\ldots,n\}$ and $i\not\in S$.
+Define $C(S,i)=$ minimum total weight of simple paths from $1$ to
+all nodes in $S$ and to $i$. First, $C(\emptyset,i)=w(1,i)$,
+where $w(1,i)=\infty$ if $(1,i)\not\in E$.
+Second, $C(S,i)=\min_{k\in S}\{C(S-\{k\},k)+w(k,i)\}$ if
+$S\not=\emptyset$. Then the total weight of the traveling
+salesman tour is $C(\{2,3,\ldots,n\},1)$.
+
+\item If using recursion to compute $C$, 
+\begin{eqnarray*}
+T(n)&\ge&(n-1)(T(n-1)+1)\\
+&=&(n-1)T(n-1)+(n-1)=(n-1)(n-2)T(n-2)+(n-1)(n-2)+(n-1)\\
+&=&\cdots\\
+&=&(n-1)!T(1)+(n-1)!+{(n-1)!\over1!}+{(n-1)!\over2!}+\cdots+
+{(n-1)!\over (n-2)!}\\
+&=&(n-1)!(1+1+{1\over1!}+{1\over2!}+{1\over3!}+\cdots+{1\over(n-2)!})\\
+&>&3(n-1)!\\
+&=&\Omega((n-1)!).
+\end{eqnarray*}
+
+\item If using dynamic programming, 
+
+\begin{center}
+\begin{tabular}{r|cccc}
+$S\backslash i$ & $1$ & $2$ & $\cdots$ & $n$\\\hline
+$\emptyset$ & $\rightarrow$ & $\rightarrow$ & $\cdots$ & $\rightarrow$\\
+$\cdots$ & $\cdots$ & $\cdots$ & $\cdots$ & $\cdots$ \\
+$\{2,3,\ldots,n\}$ & $*$ & $\cdots$ & $\cdots$ & $\cdots$\\
+\end{tabular}
+\end{center}
+
+\item The arrows indicate the computing order: row by row and left to right.
+The number of rows is the same as the number of subsets of $\{2,3,\ldots,n\}$,
+which is ${n-1\choose 0}+{n-1 \choose 1}+\cdots+{n-1 \choose{n-1}}=2^{n-1}$.
+Also there are $n$ columns. To compute each entry $C[S,i]$, we need
+$O(|S|)=O(n)$ steps. So the total time needed is $T(n)=O(n^22^{n-1})$. An
+improvement over the recursive implementation.
+
+\end{itemize}
+
+\subsection{Chained matrix multiplication}
+
+\noindent{\em Reading: CLRS 15.2}
+
+\begin{itemize}
+
+\item We wish to compute $A_1\times A_2\times\cdots\times A_n$, where
+$A_i$ is a $p_{i-1}\times p_i$ matrix. Which order of computation should
+we use to achieve the highest efficiency of the algorithm?
+
+\item The number of basic operations needed to compute $A_i\times A_{i+1}$ is 
+$p_{i-1}p_ip_{i+1}$. 
+
+\item Order of computation determines the time efficiency. For example,
+$A_1: 10\times 20$, $A_2: 20\times 50$, $A_3: 50\times 1$, and
+$A_4: 1\times 100$. If we use the order in 
+$A_1\times(A_2\times(A_3\times A_4)$, the number of basic operations
+is $(50\times1\times100)+(20\times50\times100)+(10\times20\times100)
+=125,000$. However, if we use the order in 
+$((A_1\times A_2)\times A_3)\times A_4$, the number of basic operations
+is $(10\times20\times50)+(10\times50\times1)+(10\times1\times100)
+=11,500$.
+
+\item Question: What is the minimum number of basic operations
+in computing $A_1\times A_2\times\cdots\times A_n$?
+
+\item Let $m(i,j)$ be the minimum number of basic operations in
+computing $A_i\times A_{i+1}\times\cdots\times A_j$ for
+$1\le i\le j\le n$. Assume in general that $k$ is used to
+indicate the position of the last multiplication to be 
+performed among all: $(A_i\times\cdots\times A_k)\times
+(A_{k+1}\times\cdots\times A_j)$. Then
+
+$m(i,j)=0$ if $i=j$.
+
+$m(i,j)=\min_{i\le k\le j-1}\{m(i,k)+m(k+1,j)+p_{i-1}p_kp_j\}$ if $i\not=j$.
+
+\item We can use a dynamic programming algorithm to compute $m(1,n)$,
+the minimum number of basic operations in computing 
+$A_1\times A_2\times\cdots\times A_n$. Entries are filled left to right
+and bottom to top. Note that those in the lower left triangle are
+undefined.
+
+\begin{center}
+\begin{tabular}{c|c|c|c|c}
+$i\backslash j$ & $1$ & $2$ & $\cdots$ & $n$\\\hline
+$1$ & $0$ & $\uparrow$ & $\cdots$ & $*$\\
+$2$ & $--$ & $0$ & $\cdots$ & $\uparrow$\\
+$\cdots$ & $\cdots$ & $\cdots$ & $\cdots$ & $\cdots$\\
+$n$ & $--$ & $--$ & $\cdots$ & $0$\\
+\end{tabular}
+\end{center}
+
+\item The algorithm:
+
+\qquad for $i\leftarrow 1$ to $n$ 
+
+\qquad\qquad $m[i,i]\leftarrow 0$
+
+\qquad for $j\leftarrow 2$ to $n$
+
+\qquad\qquad for $i\leftarrow j-1$ to $1$
+
+\qquad\qquad\qquad $m[i,j]\leftarrow\min_{i\le k\le j-1}
+\{m[i,k]+m[k+1,j]+p_{i-1}p_kp_j\}$
+
+\item Time complexity: $O(n^3)$.
+
+\end{itemize}
+
+\subsection{Making change}
+
+\begin{itemize}
+
+\item Let $n$, a positive integer, be the number of different
+types of coin in a country. Let $coin[1..n]$, an array of
+positive integers, be the values of these $n$ types of coin. Let
+$m$, a positive integer, be the amount of change that one wishes to make.
+Design a dynamic programming algorithm that determines whether $m$
+can be made with the coins, and if so, computes the minimum number of coins
+needed.
+
+\item Define $count(i)$ to be the minimum number of coins to
+make $i$ ($>0$). That $count(i)=\infty$ implies that no solution
+exists. The recursive definition of $count(i)$ is as follows.
+
+$count(1)=\infty$ if $1\not\in coin[\ ]$.
+
+$count(coin[j])=1$ for $j=1,\ldots,n$.
+
+$count(i)=1+\min_{1\le j\le n,coin[j]<i}\{count(i-coin[j])\}$
+
+\item The table is a 1-D table and its entries are filled from left
+to right until $count[m]$ is reached.
+
+\begin{center}
+\begin{tabular}{c|c|c|c|c}
+$i$ & $1$ & $2$ & $\cdots$ & $m$\\\hline
+$count[i]$ & $\rightarrow$ & $\rightarrow$ & $\cdots$ & $*$\\
+\end{tabular}
+\end{center}
+
+\item Algorithm:
+
+\qquad for $i\leftarrow 1$ to $m$ $count[i]\leftarrow -1$
+
+\qquad $count[1]\leftarrow\infty$
+
+\qquad for $j\leftarrow 1$ to $n$
+
+\qquad\qquad $count[coin[j]]\leftarrow 1$
+
+\qquad for $i\leftarrow 1$ to $m$
+
+\qquad\qquad if $count[i]=-1$
+
+\qquad\qquad\qquad $min\leftarrow\infty$
+
+\qquad\qquad\qquad for $j\leftarrow 1$ to $n$
+
+\qquad\qquad\qquad\qquad if $coin[j]<i$ 
+              
+\qquad\qquad\qquad\qquad\qquad if $min>count[i-coin[j]]$
+
+\qquad\qquad\qquad\qquad\qquad\qquad $min\leftarrow count[i-coin[j]]$
+
+\qquad\qquad\qquad $count[i]\leftarrow 1+min$
+ 
+\item Time complexity: $\Theta(mn)$. (pseudo-polynomial)
+
+\end{itemize}
+
+\subsection{Longest common subsequence}
+
+\noindent{\em Reading: CLRS 15.4}
+
+\begin{itemize}
+
+\item Subsequence: If $X=<A,B,C,B,D,A,B>$ and $Z=<B,C,D,B>$, then
+$Z$ is a subsequence of $X$.
+
+Common subsequence: Let $Y=<B,D,C,A,B,A>$. Then $<B,C,A>$ is a
+common subsequence of $X$ and $Y$. 
+
+Longest common subsequence (LCS): For $X$ and $Y$, there is no 
+common subsequence with length longer than $4$. $<B,C,B,A>$ and
+$<B,D,A,B>$ are both LCS's of $X$ and $Y$.
+
+Question: Given two sequences, what is the length of their LCS?
+(What is the LCS of the sequences?)
+
+\item A brute-force method:
+
+Assume $X=<x_1,\ldots,x_m>$ and $Y=<y_1,\ldots,y_n>$. For each subsequence
+of $X$, check if it is also a subsequence of $Y$, keeping track of the
+longest found.
+
+How many possible subsequences are there for $X$?
+${m \choose 0}+{m \choose 1}+{m \choose 2}+\cdots+{m \choose m}
+=2^m$.
+
+\item A recursive approach:
+
+Define $X_i=<x_1,\ldots,x_i>$ and $Y_j=<y_1,\ldots,y_j>$.
+Define $C(i,j)$ to be the length of the LCS of $X_i$ and $Y_j$.
+
+$C(i,j)=0$ if $i=0$ or $j=0$;
+
+$C(i,j)=C(i-1,j-1)+1$ if $i,j>0$ and $x_i=y_j$;
+
+$C(i,j)=\max\{C(i,j-1),C(i-1,j)\}$ if $i,j>0$ and $x_i\not=y_j$.
+
+When $x_i=y_j$, $X_i=X_{i-1}<x_i>$ and $Y_j=Y_{j-1}<y_j>$.
+So $LCS(X_i,Y_j)=LCS(X_{i-1},Y_{j-1})x_i$. Hence,
+$C(i,j)=C(i-1,j-1)+1$.
+
+When $x_i\not=y_j$, $x_i$ and $y_j$ cannot both appear in
+$LCS(X_i,Y_j)$. So $LCS(X_i,Y_j)=LCS(X_i,Y_{j-1})$ or
+$LCS(X_{i-1},Y_j)$. Hence, $C[i,j]=\max\{C(i,j-1),C(i-1,j)\}$.
+
+\item A nonrecursive implementation: Dynamic programming:
+
+A 2-D table is constructed where each entry is filled left to
+right and top to bottom. The initialization handles the first row
+and the first column of the table. Entry $C[m,n]$ is the length
+of the LCS of $X$ and $Y$.
+
+\begin{center}
+\begin{tabular}{c|ccccc}
+$i\backslash j$ & $0$ & $1$ & $2$ & $\cdots$ & $n$\\\hline
+$0$ & $0$ & $0$ & $0$ & $\cdots$ & $0$\\
+$1$ & $0$ & $\rightarrow$ & $\rightarrow$ & $\cdots$ & $\rightarrow$\\
+$2$ & $0$ & $\rightarrow$ & $\rightarrow$ & $\cdots$ & $\rightarrow$\\
+$\cdots$ & $\cdots$ & $\cdots$ & $\cdots$ & $\cdots$ & $\cdots$\\
+$m$ & $0$ & $\rightarrow$ & $\rightarrow$ & $\cdots$ & $*$\\
+\end{tabular}
+\end{center}
+
+\item The algorithm:
+
+\qquad for $i\leftarrow 0$ to $m$ $C[i,0]\leftarrow 0$
+
+\qquad for $j\leftarrow 0$ to $n$ $C[0,j]\leftarrow 0$
+
+\qquad for $i\leftarrow 1$ to $m$
+
+\qquad\qquad for $j\leftarrow 1$ to $n$
+
+\qquad\qquad\qquad if $x_i=y_j$ $C[i,j]\leftarrow C[i-1,j-1]+1$
+
+\qquad\qquad\qquad else $C[i,j]=\max\{C[i,j-1],C[i-1,j]\}$
+
+\item Time complexity: $\Theta(mn)$.
+
+\item How to compute the LCS in addition to the length of the LCS:
+Maintain an array $S[i,j]$ of special characters. Set $S[i,0]=S[0,j]=
+\sqcup$ (single space) for $0\le i\le m$ and $0\le j\le n$.
+In the nested for loop, if $x_i=y_j$, set $S[i,j]$ to be
+$\nwarrow$, else if $C[i,j-1]\ge C[i-1,j]$, set $S[i,j]$ to be
+$\leftarrow$, and if $C[i,j-1]<C[i-1,j]$, set $S[i,j]$ to be
+$\uparrow$. The following additional code generates the
+LCS of two sequences.
+
+\qquad $i\leftarrow m$
+
+\qquad $j\leftarrow n$
+
+\qquad while $S[i,j]\not=\sqcup$
+
+\qquad\qquad if $S[i,j]=\leftarrow$ $j\leftarrow j-1$
+
+\qquad\qquad else if $S[i,j]=\uparrow$ $i\leftarrow i-1$
+
+\qquad\qquad else push $x_i$ to a stack
+
+\qquad\qquad\qquad $i\leftarrow i-1$
+
+\qquad\qquad\qquad $j\leftarrow j-1$
+
+\qquad output the content in the stack
+
+\end{itemize}
+
+\subsection{Optimal binary search tree}
+
+\noindent{\em Reading: CLRS 15.5}
+
+\begin{itemize}
+
+\item Given a set of keys (numbers) and the probability that each key
+is located. How can one organize the set in a binary search tree so that
+the average time to locate a key in the tree is minimized?
+
+\item For each node (key) in a binary search tree, the time needed to
+locate the node is its level number. 
+
+\item Let the keys be $a_1, a_2,\ldots,a_n$ (in increasing order).
+Let $l_i$ be the level number of the node corresponding to key $a_i$
+in a given binary search tree. Let $p_i$ be the probability that
+$a_i$ is to be located. Then the average search time for that tree
+is $\sum_{i=1}^n p_il_i$. We wish to build an optimal binary search
+tree, where this cost is minimized.
+
+\item An example: $n=3$ and $p_1=0.7$, $p_2=0.2$ and $p_3=0.1$.
+The following figure contains all five possible binary search trees
+for $n=3$.
+
+\vskip 0.25cm
+\begin{center}
+\includegraphics[height=1in]{f12.pdf}
+\end{center}
+
+1. 3(0.7)+2(0.2)+1(0.1)=2.6
+
+2. 2(0.7)+3(0.2)+1(0.1)=2.1
+
+3. 2(0.7)+1(0.2)+2(0.1)=1.8
+
+4. 1(0.7)+3(0.2)+2(0.1)=1.5
+
+5. 1(0.7)+2(0.2)+3(0.1)=1.4 $\Leftarrow$ optimal!
+
+\item A recursive approach: Let $c(i,j)$ be the average search time
+in a tree with only $a_i,\ldots,a_j$, where $1\le i\le j\le n$.
+If $a_k$ happens to be the root of the tree containing $a_i,\ldots,a_j$,
+then in the left subtree are $a_i,\ldots,a_{k-1}$ and in
+the right subtree are $a_{k+1},\ldots,a_j$.
+
+$c(i,i)=p_i$ for $1\le i\le n$
+
+$c(i,j)=\min_{i\le k\le j}\{c(i,k-1)+c(k+1,j)+\sum_{l=i}^jp_l\}$ for $i<j$
+
+$c(i,j)=0$ for $i=j+1$ (Why needed?)
+
+\item A dynamic programming algorithm with $O(n^3)$:
+
+\begin{center}
+\begin{tabular}{c|c|c|c|c|c}
+$i\backslash j$ & $1$ & $2$ & $\cdots$ & $n-1$ & $n$\\\hline
+$1$ & $p_1$ & $\uparrow$ & $\cdots$ & $\uparrow$ & $*$\\
+$2$ & $0$ & $p_2$ & $\cdots$ & $\uparrow$ & $\uparrow$\\
+$\cdots$ & $\cdots$ & $\cdots$ & $\cdots$ & $\cdots$ & $\cdots$\\
+$n$ & $--$ & $--$ & $\cdots$ & $0$ & $p_n$\\
+\end{tabular}
+\end{center}
+ 
+\end{itemize}
+
+\subsection{Memory functions}
+
+\noindent{\em Reading: CLRS 15.3}
+
+\begin{itemize}
+
+\item Divide and conquer: Only needed entries are 
+computed but some entries are computed more than once.
+Dynamic programming: All entries
+in the table are computed once, whether needed or not.
+
+\item A compromise: Only compute needed entries exactly once.
+To do so, we combine the recursive implementation with a
+table. Before we enter a recursion, we check the table to
+see whether the entry has been computed before. This method
+is called the memory function method.
+
+\item Example: Chained matrix multiplication revisited.
+
+We first initialize all entries in table $m[1..n,1..n]$ to be $-1$,
+and then call $mf(1,n)$.
+
+$mf(i,j)$
+
+\qquad if $i=j$ return 0
+
+\qquad if $m[i,j]\not=-1$ return $m[i,j]$
+
+\qquad $c\leftarrow\infty$
+
+\qquad for $k\leftarrow i$ to $j-1$
+
+\qquad\qquad $c\leftarrow\min\{c, mf(i,k)+mf(k+1,j)+p_{i-1}p_kp_j\}$
+
+\qquad $m[i,j]\leftarrow c$
+
+\qquad return $c$
+
+\item The time complexity is no larger than that in the
+corresponding dynamic programming algorithm, but the space
+complexity will be more since recursion requires more space 
+to implement.
+
+\end{itemize}
+
+\newpage
+
+\section{The Lower Bound Theory}
+
+\subsection{What is a lower bound?}
+
+\begin{itemize}
+
+\item Algorithmics/upper bounds:
+
+Prove that a problem can be solved in time $O(f(n))$ by designing
+and analyzing a specific algorithm for the problem, for some
+$f(n)$ that we aim to reduce as much as possible. We say that 
+$O(f(n))$ is an upper bound to the problem. An upper bound is
+always paired with an algorithm. It is the amount of time sufficient
+to solve the problem.
+
+\item Complexity/lower bounds:
+
+Prove that any algorithm capable of solving the problem correctly
+on all of its instances must take time $\Omega(g(n))$, for some 
+$g(n)$ that we try to push as large as possible. We say that 
+$g(n)$ is a lower bound to the problem. A lower bound shows the
+difficult nature of the problem, so it has nothing to do with any
+specific algorithm. It is the amount of time necessary to solve
+the problem by any algorithm within the model.
+
+\item Optimality of an algorithm:
+
+If $f(n)=\Theta(g(n))$, then we say that we have found the most efficient 
+algorithm possible, except perhaps for changes in the hidden multiplicative
+constant.
+
+\item A graphical explanation:
+
+\vskip0.25cm
+\begin{center}
+\includegraphics[height=1.2in]{f13.pdf}
+\end{center}
+
+\item Example: Matrix multiplication.
+
+Lower bound: $n^2$
+
+Upper bounds: $n^3\rightarrow n^{2.81}\rightarrow n^{2.61}\rightarrow
+n^{2.376}\rightarrow\cdots$
+   
+\end{itemize}
+
+\subsection{The decision tree method}
+
+\noindent{\em Reading: CLRS 8.1}
+
+\begin{itemize}
+
+\item A comparison-based model for proving worst-case lower bound:
+
+The following is a decision tree for sorting 3 items by comparisons.
+Each interior node represents a comparison. Each tree edge is an
+outcome ($<$ or $>$). Each leaf is a possible output (a sorted list).
+Each path from the root to a leaf represents the steps of sorting
+a certain type of input. There are $n!$ leaves in the tree,
+corresponding to $n!$ permutations. The height of the tree gives
+the maximum number of comparisons in the algorithm for all inputs,
+thus the worst case time complexity of the algorithm the tree 
+represents.
+
+How to use a decision tree to establish a lower bound: For each
+comparison-based sorting algorithm, $A_i$, there is a decision
+tree, $T_i$. Let $height(T_i)$ be the height of $T_i$, thus the
+worst-case time of $A_i$. Obviously, $\min_i\{height(T_i)\}$ is
+a lower bound to the problem.
+
+\vskip 0.25cm
+\begin{center}
+\includegraphics[height=1.3in]{f14.pdf}
+\end{center}
+
+\item Lemma: A binary tree of height $h$ has at most $2^h$ leaves.
+
+{\em Proof}\quad We assume that the height of a tree is the number of edges
+on the longest path between the root and a leaf. We induct on $h$.
+When $h=0$, the tree has just one node. There is 1 leaf, which is no larger
+than $2^0$. Assume for $i\le h-1$, a tree of height $i$ has no more
+than $2^i$ leaves. Now consider a tree with height $h$. Assume the
+heights of the left and right subtrees are $h_L$ and $h_R$, respectively.
+so $h=\max\{h_L,h_R\}+1$. By the inductive hypothesis, the
+numbers of leaves in the left and right subtrees are at most
+$2^{h_L}$ and $2^{h_R}$, respectively. So the number of leaves in the
+tree with height $h$ is at most $2^{h_L}+2^{h_R}\le 2^h$.
+
+\item Theorem: Any comparison-based sorting algorithm requires
+$\Omega(n\log n)$ time in the worst case.
+
+{\em Proof}\quad Let $T$ be a decision tree for any algorithm that
+sorts $n$ elements by comparisons. $T$ has $n!$ leaves. So the height
+of the tree, $h$, is at least $\log n!$. (Assume not. Then $h<log n!$.
+By the lemma, the number of leaves in the tree is at most $2^h<2^{log n!}
+=n!$, which is impossible.) So for any sorting algorithm, the worst-case
+time complexity is the height of the decision tree, thus at least $\log n!
+=\Omega(n\log n)$.
+ 
+\item Both Merge Sort and Heap Sort achieve the optimality of sorting
+since their worst-case times match the established lower bound, $n\log n$.
+Radix Sort has a worst-case time of $\Theta(d(n+k))$, where $d$ is the number of
+digits and $k$ is the base. It is $\Theta(n)$ when $d=O(1)$ and $k=O(n)$.
+This is not a contradiction to the $n\log n$ lower bound, since Radix
+Sort is not comparison based. 
+
+\item A comparison-based model for proving average-case lower bound:
+
+Again consider the example of sorting 3 elements. As in
+any average-case analysis, assume that all elements in the list
+are distinct and that all permutations are equally likely.
+For any sorting algorithm, there is a corresponding decision tree
+with $n!$ leaves. Let $d_i$ be the depth, or the number of edges on the
+path between the root and a leaf $i$. Let $p_i$ be the probability 
+that permutation (leaf) $i$ occurs. Then the average-case time
+of the algorithm that the tree represents is $\sum_i p_id_i={1\over n!}
+\sum_id_i$.
+
+\begin{center}
+\begin{tabular}{c|c|c|c|c|c|c}
+leaf & $abc$ & $acb$ & $cab$ & $bac$ & $bca$ & $cba$\\\hline
+probability & $p_1$ & $p_2$ & $p_3$ & $p_4$ & $p_5$ & $p_6$\\
+depth & $d_1$ & $d_2$ & $d_3$ & $d_4$ & $d_5$ & $d_6$\\
+\end{tabular}
+\end{center}
+
+\item Lemma: Let $T_m$ be any binary tree with $m$ leaves such that each nonleaf
+has exactly 2 children. Define $D(T_m)=\sum_id_i$ (the sum of the depths of all
+leaves in $T$). Define $D_m=\min_{\forall T_m}\{D(T_m)\}$. Prove that
+$D_m\ge m\log m$.
+
+{\em Proof}\quad We induct on $m$. When $m=1$, the tree has only one node.
+So $D_1=0\ge 1\log 1$. Assume that for any $i\le m-1$, $D_i\ge i\log i$.
+Now consider any tree with $m$ leaves. Assume there are $i$ leaves in the
+left subtree and $m-i$ leaves in the right subtree. ($i\not=0$ and
+$i\not=m$ since each nonleaf has two children.) So 
+\begin{eqnarray*}
+D_m&=&\min_{1\le i\le m-1}\{D_i+D_{m-i}+m\}\\
+&\ge& m+\min_{1\le i\le m-1}\{i\log i+(m-i)\log (m-i)\}
+\end{eqnarray*}
+Define function $f(x)=x\log x+(m-x)\log (m-x)$.
+Then the derivative $f'(x)=x{1\over \ln2}{1\over x}+\log x+(m-x)
+{1\over \ln2}{-1\over m-x}-\log (m-x)=\log x-\log(m-x)$.
+Let $f'(x)=0$. Then $\log x=\log(m-x)$, which implies $x={m\over2}$.
+So $f(x)$ achieves the minimum when $x={m\over2}$. To continue,
+\begin{eqnarray*}
+D_m&\ge&m+\min_{1\le i\le m-1}\{i\log i+(m-i)\log (m-i)\}\\
+&\ge&m+{m\over2}\log{m\over2}+{m\over2}\log{m\over2}\\
+&=&m+m\log{m\over2}\\
+&=&m\log m
+\end{eqnarray*}
+
+\item Theorem: Any comparison-based sorting algorithm requires 
+$\Omega(n\log n)$ time in the average case.
+
+{\em Proof}\quad Let $T$ be a decision tree for any algorithm that
+sorts $n$ elements by comparisons. $T$ has $n!$ leaves. So the
+average depth of the leaves is ${1\over n!}\sum_id_i\ge {1\over n!}D_{n!}
+\ge {1\over n!}n!\log n!=\log n!$.
+So for any sorting algorithm, the average-case
+time complexity is the average depth of the decision tree, thus at least $\log n!
+=\Omega(n\log n)$.
+
+\item Bucket Sort: not comparison-based, with $O(n)$ average time.
+
+Let $A=(a_1,\ldots,a_n)$, where $a_i\in[0,1)$ is generated randomly 
+such that $a_1,\ldots,a_n$ are distributed uniformly in $[0,1)$.
+For example, $A=(0.78,0.17,0.39,0.26,0.72,0.94,0.61)$. 
+Let $B$ be an array of intervals in $[0,1)$, where the length of
+each interval is $1\over n$. In particular, $B[i]$ represents
+interval $[{i\over n},{i+1\over n})$ for $0\le i\le n-1$. Each
+$B[i]$ will be a pointer to a list of numbers falling into the
+corresponding interval.
+
+\qquad for $i\leftarrow 1$ to $n$ 
+
+\qquad\qquad insert $A[i]$ into list $B[\lfloor nA[i]\rfloor]$
+
+\qquad for $i\leftarrow 0$ to $n-1$
+
+\qquad\qquad sort list $B[i]$ using any sorting algorithm
+
+\qquad concatenate $B[0],\ldots,B[n-1]$ into a list for output
+
+Why should $A[i]$ go to list $B[\lfloor nA[i]\rfloor]$? Assume 
+$A[i]$ goes to $B[x]$. Then ${x\over n}\le A[i]<{x+1\over n}$.
+So $x\le nA[i]<x+1$. So $nA[i]-1<x\le nA[i]$. Since $x$ is an
+integer, $x=\lfloor nA[i]\rfloor$.
+
+Time complexity: $\Theta(n^2)$ or $\Theta(n\log n)$ in the worst case;
+$\Theta(n)$ in the average case since each list in $B$ has 1 element
+on average.
+ 
+\end{itemize}
+
+\subsection{The adversary method}
+
+\begin{itemize}
+
+\item The adversary strategy: An adversary provides worst-case
+input that forces all algorithms solving the problem to work as
+hard as possible.
+
+Example: Alice (1) has a date (month/day) in mind (this is what she
+tells Bob); (2) answers Bob's questions honestly; and
+(3) wants to force Bob to ask as many questions as possible.
+Bob (1) asks yes/no questions and
+(2) wants to guess the date as quickly as possible.
+
+Bob: Is it in the winter? (December, January and February)
+
+Alice: No (since there are more dates in the other three seasons).
+
+Bob: Is the first letter of the month's name in the first half of 
+the alphabet?
+
+Alice: Yes (since among the remaining 9 months, 6 are in the
+first half of the alphabet, March, April, May, June, July,
+August).
+
+$\cdots\cdots$
+
+Alice didn't pick a date at all. Is this cheating? Not to Bob.
+In fact, Alice will not do so until the need for consistency
+in her answers pins her down. This is how a good adversary should
+be.
+
+For a comparison-based model, the adversary works as follows:
+
+\vskip 0.25cm
+\begin{center}
+\includegraphics[height=1.3in]{f15.pdf}
+\end{center}
+
+\item Finding the max and min at the same time:
+
+Let $C_{1,n}(n)$ be the number of comparisons necessary and
+sufficient to find the maximum and minimum of $n$ integers.
+Prove that $C_{1,n}(n)=\lceil{3n\over2}\rceil-2$.
+
+Upper bound: $C_{1,n}(n)\le\lceil{3n\over2}\rceil-2$. Wish
+to design an algorithm which takes at most $\lceil{3n\over2}\rceil-2$
+comparisons. The algorithm first uses $n-1$ comparisons to find the
+maximum among the $n$ numbers and then $\lceil{n\over2}\rceil-1$ 
+more comparisons to find the minimum among the $\lceil{n\over2}\rceil$
+non-winners in the first round.
+
+\vskip 0.25cm
+\begin{center}
+\includegraphics[height=1.1in]{f16.pdf}
+\end{center}
+
+Lower bound: $C_{1,n}(n)\ge\lceil{3n\over2}\rceil-2$.
+Assume all keys are distinct. At any time in any algorithm,
+there are four kinds of elements.
+
+Novice: not compared yet;
+
+Winner: always wins so far;
+
+Loser: always loses so far;
+
+Moderate: wins some and loses some.
+
+Define a state $(i,j,k,l)$, where $i$, $j$, $k$, and $l$ are
+the numbers of novices, winners, losers, and moderates, respectively.
+The initial state is $(n,0,0,0)$ and the final state is $(0,1,1,n-2)$.
+Question: What is the minimum number of comparisons from the initial
+state to the final state? A state transition table is given below:
+
+\begin{center}
+\begin{tabular}{r|l}
+& $(i,j,k,l)$\\\hline
+NN & $(i-2,j+1,k+1,l)$\\
+NW & $(i-1,j,k,l+1)$ or $(i-1,j,k+1,l)$\\
+NL & $(i-1,j+1,k,l)$ or $(i-1,j,k,l+1)$\\
+NM & $---$\\
+WW & $(i,j-1,k,l+1)$\\
+WL & $(i,j,k,l)$ or $(i,j-1,k-1,l+2)$\\
+WM & $---$\\
+LL & $(i,j,k-1,l+1)$\\
+LM & $---$\\
+MM & $---$
+\end{tabular}
+\end{center}
+
+Assume that an adversary provides the input and uses the following
+strategy:
+
+\begin{center}
+\begin{tabular}{r|c|c|c|c|c|c}
+algorithm & NN & NW & NL & WW & WL & LL \\\hline
+adversary & arbitrary & W wins & N wins & arbitrary & W wins & arbitrary
+\end{tabular}
+\end{center}
+
+Why is the adversary able to make the choices it does in the table
+above? For an NW comparison, it can make N to be arbitrarily small 
+so that W is the winner. For the similar reason in an NL comparison,
+it can make N to be arbitrarily large so that L is the loser.
+In a WL comparison, the adversary can increase W (or decrease L) so
+that W beats L without changing the outcomes of the previous
+comparisons. Since the algorithm cannot see the numbers but only
+the comparison results, this action by the adversary is totally
+legal. 
+
+In the initial state, $i+j+k=n$, while in the final state 
+$i+j+k=2$. Since only a WW or LL comparison decreases $i+j+k$
+(by 1), we need to make at least $n-2$ WW or LL comparisons.
+Next consider the change of $i$ in the initial and final states.
+It decreases from $i=n$ to $i=0$. Since WW and LL comparisons
+never change the value of $i$, some NN, NW, NL comparisons are
+needed. Since such a comparison decreases $i$ by at most $2$,
+a minimum of $\lceil{n\over2}\rceil$ comparisons are needed.
+So the total number of comparisons necessary is
+$n-2+\lceil{n\over2}\rceil=\lceil{3n\over2}\rceil-2$.
+ 
+\end{itemize}
+
+\newpage
+
+\subsection{Reduction}
+
+\begin{itemize}
+
+\item Proving lower bounds by reduction:
+
+Let $P$ be the problem whose lower bound, $f(n)$, we wish to prove.
+Let $Q$ be a problem whose lower bound, $g(n)$, is known. For any 
+algorithm $A$ for $P$, we try to define an algorithm $B$ for $Q$ which
+calls $A$ as follows:
+
+\vskip 0.25cm
+\begin{center}
+\includegraphics[height=1.8in]{f17.pdf}
+\end{center}
+
+We assume that there is an algorithm, say $A$, for $P$ that takes
+time $o(f(n))$. Then from the chart above, there is an algorithm,
+$B$, for $Q$, with time $t_1(n)+o(f(n))+t_2(n)$. If $t_1(n)+o(f(n))+t_2(n)
+=o(g(n))$, then we just found an algorithm which beats the proven
+lower bound, $g(n)$, for $Q$. This is of course impossible. 
+So there is no algorithm for $P$ with time faster than $f(n)$.
+Therefore, $f(n)$ is a lower bound for $P$.
+
+\item The convex hull problem: Given a set $P$ of $n$ points on the 2-D plane.
+The {\em convex hull} of the point set, denoted by $CH(P)$, is a convex
+polygon, represented by its vertices in counterclockwise order, say,
+$p_1, p_2, \ldots, p_k$, where $p_i\in P$ for $i=1, 2, \ldots, k$,
+such that the polygon contains all the other points in $P$. See the
+following figure for an example.
+
+\vskip 0.25cm
+\begin{center}
+\includegraphics[height=1.2in]{f18.pdf}
+\end{center}
+
+Next we will prove that any algorithm that finds $CH(P)$ for a given
+$P$ of $n$ points takes at least $n\log n$ time in the worst case.
+
+Assume there is an algorithm $A$ for the convex hull problem which
+takes $o(n\log n)$ worst-case time. Now we will design a sorting
+algorithm $B$ that calls $A$. For any input list of $n$ numbers
+$x_1, x_2, \ldots, x_n$, algorithm $B$ first converts the list in $O(n)$
+to a point set $(x_1, x_1^2), (x_2, x_2^2), \ldots, (x_n, x_n^2)$
+and feed the point set as input to algorithm $A$. Algorithm $A$ then
+computes the convex hull of the point set in $o(n \log n)$ time.
+Because of the special locations of the points, the convex hull will
+contain all points as the vertices of the polygon, and the points
+are output in counterclockwise order. Algorithm $B$ then spends $O(n)$
+to search the point in the output list with the smallest $x$-coordinate,
+and from there to produce a list of $n$ $x$-coordinates, which is clearly
+the sorted version of the original input list to $B$. So algorithm $B$
+sorts a list of $n$ numbers in time $O(n)+o(n\log n)+O(n)=o(n\log n)$.
+This is a contradiction to the $\Omega(n\log n)$ lower bound for sorting.
+
+\vskip 0.25cm
+\begin{center}
+\includegraphics[height=1.6in]{f19.pdf}
+\end{center}
+
+\end{itemize}
+
+\subsection{Trivial lower bounds by input/output}
+
+\begin{itemize}
+
+\item We can also use the amount of input data that any correct algorithm needs to process
+or the amount of data that any  correct algorithm needs to produce to establish
+trivial lower bounds.
+
+\item For example in the matrix multiplication problem, since the
+multiplication of two $n\times n$ matrices is another $n\times n$
+matrix and there are $n^2$ entries to compute, $n^2$ is obviously
+a lower bound. (Not yet proved to be tight.)
+
+\item For another example, consider the problem of generating all permutations
+of $n$ objects. Since there are $n!$ permutations to generate, $\Omega(n\cdot n!)$ is 
+an obvious lower bound. (Tight.)
+
+\item Evaluation of an $n$-degree polynomial requires that all $n+1$ coefficients be
+processed. Thus the trivial lower bound is $\Omega(n)$. (Tight.)
+
+\item Some bounds established by input/output are not correct lower bounds. 
+For example, searching target in a sorted array of $n$ elements does not require to check 
+all $n$ elements.
+
+\item Some lower bounds established by input/output are not trivial to prove.
+For example, determining connectivity of an undirected graph by its adjacency matrix
+requires to check the existence of each of the $n(n-1)/2$ potential edges.
+
+\end{itemize}
+
+\newpage
+
+\section{NP-Completeness}
+
+\subsection{Optimization versus decision}
+
+\begin{itemize}
+
+\item Example: Graph Coloring
+
+Optimization: Given $G=(V,E)$, color the nodes with the minimum
+number of colors such that no two adjacent nodes connected by an
+edge have the same color.
+
+Decision: Given $G=(V,E)$ and $B>0$ (an integer), is there a
+feasible coloring of the nodes using at most $B$ colors?
+
+\begin{center}
+\begin{tabular}{c|c}
+Optimization & Decision\\\hline
+Minimize $f(S)$ & $f(S)\le B$\\\hline
+Maximize $f(S)$ & $f(S)\ge B$
+\end{tabular}
+\end{center}
+
+\item Theorem: If there is an algorithm with time $\Theta(T(n))$ for
+OPT, then there is an algorithm with time $\Theta(T(n))$ for DEC.
+In other words, DEC is always no harder than its OPT.
+
+\vskip 0.25cm
+\begin{center}
+\includegraphics[height=2in]{f28.pdf}
+\end{center}
+
+\end{itemize}
+
+\subsection{The class {\bf P}}
+
+\begin{itemize}
+
+\item Definition: {\bf P} is the class of problems solvable in
+polynomial time. 
+
+$O(n^c)$, where $c$ is a constant.
+
+Tractable (not so hard).
+
+\item Why use polynomial as the criterion?
+
+If a problem is not in {\bf P}, it will be extremely expensive
+and probably impossible to solve in practice for large sizes.
+
+Polynomials have nice closure properties: $+, -, *$, and composition.
+
+{\bf P} is independent of models of computation: $1$TM, $k$TM, RAM, etc..
+
+\end{itemize}
+
+\subsection{The class {\bf NP}}
+
+\begin{itemize}
+
+\item Definition: {\bf NP} is the class of problems solvable in 
+polynomial time by nondeterministic algorithms.
+
+\item Definition: Nondeterministic algorithms$\Leftrightarrow$
+nondeterministic computer(a hypothetical model that doesn't exist)
+
+\begin{itemize}
+
+\item Guessing phase: Guess a solution (always on target).
+
+\item Verifying phase: Verify the solution.
+
+\end{itemize}
+
+\item Example: Graph Coloring is in {\bf NP}. Consider the decision
+problem. A nondeterministic algorithm first guesses a coloring scheme
+(in polynomial time) and then verify if the coloring uses no more
+than $B$ colors and if any two adjacent nodes have different colors
+(in polynomial time). 
+
+\item Theorem: {\bf P}$\subseteq${\bf NP}.
+
+Any ordinary (deterministic) algorithm is a special case of
+a nondeterministic algorithm.
+
+\item Theorem: Any $\Pi\in${\bf NP} can be solved by a deterministic
+algorithm in time $O(c^{p(n)})$ for some $c>0$ and polynomial $p(n)$.
+
+\item Open problem: {\bf NP}$\subseteq${\bf P}? or
+{\bf P}$=${\bf NP}? 
+
+\end{itemize}
+
+\subsection{Polynomial reduction}
+
+\begin{itemize}
+
+\item Definition: Let $\Pi_1$ and $\Pi_2$ be two decision problems,
+and $\{I_1\}$ and $\{I_2\}$ be sets of instances for $\Pi_1$ and
+$\Pi_2$, respectively. We say there is a polynomial reduction
+from $\Pi_1$ to $\Pi_2$, or $\Pi_1\propto_p\Pi_2$ if there is
+$f:\{I_1\}\rightarrow$ subset of $\{I_2\}$ such that (1)
+$f$ can be computed in polynomial time and (2) $I_1$ has a 
+``yes'' solution if and only if $f(I_1)$ has a ``yes''
+solution. 
+
+\item Theorem: If $\Pi_1\propto_p\Pi_2$, then $\Pi_2\in${\bf P}
+implies $\Pi_1\in${\bf P}.
+
+\item Theorem: If $\Pi_1\propto_p\Pi_2$ and $\Pi_2\propto_p\Pi_3$,
+then $\Pi_1\propto_p\Pi_3$.
+
+\item {\em Remark:} $\propto_p$ means ``no harder than''.
+
+\item Example: PARTITION$\propto_p$KNAPSACK.
+
+PARTITION:
+
+INSTANCE: A finite set $A$ of numbers.
+
+QUESTION: Is there $A'\subseteq A$ such that $\sum_{a\in A'}a=
+\sum_{a\in A-A'}a$?
+
+KNAPSACK:
+
+INSTANCE: $U=\{u_1,\ldots,u_n\}$, $w:U\rightarrow Z^+$,
+$v:U\rightarrow Z^+$, and $W,V\in Z^+$.
+
+QUESTION: Is there $U'\in U$ with $\sum_{u\in U'}w(u)\le W$
+such that $\sum_{u\in U'}v(u)\ge V$?
+
+For any instance for PARTITION: $A=\{a_1,\ldots,a_n\}$,
+let $U=\{u_1,\ldots,u_n\}$ with each $u_i$ corresponding to
+each $a_i$. Let $w(u_i)=v(u_i)=a_i$, and $W=V={1\over2}\sum_i a_i$.
+
+This reduction can certainly be done in polynomial time. Next we
+need to prove that there is $A'\subseteq A$ with $\sum_{a\in A'}a
+={1\over2}\sum_i a_i$ if and only if there is $U'\subseteq U$
+with $\sum_{u\in U'}w(u)\le W$ and $\sum_{u\in U'}v(u)\ge V$.
+The proof is straightforward.
+
+\end{itemize}
+
+\subsection{The class {\bf NPC}}
+
+\begin{itemize}
+
+\item Definition: {\bf NPC} ({\bf NP}-complete) is the class of
+the hardest problems in {\bf NP}, or equivalently, $\Pi\in${\bf NPC}
+if $\Pi\in${\bf NP} and $\forall\Pi'\in${\bf NP}, $\Pi'\propto_p\Pi$.
+
+\item Theorem: If $\Pi_1\in${\bf NPC}, $\Pi_2\in${\bf NP}, and
+$\Pi_1\propto_p\Pi_2$, then $\Pi_2\in${\bf NPC}.
+
+\item Theorem: If $\exists\Pi\in${\bf NPC} such that $\Pi\in${\bf P},
+then {\bf P}$=${\bf NP}.
+
+\item Theorem: If $\exists\Pi\in${\bf NPC} such that $\Pi\not\in$
+{\bf P}, then {\bf P}$\not=${\bf NP}.
+ 
+\item Satisfiability (SAT):
+
+INSTANCE: A boolean formula $\alpha$ in $CNF$ with variables 
+$x_1,\ldots,x_n$ (e.g., $\alpha=(x_1\lor x_2)\land(\neg x_2\lor x_3)$).
+
+QUESTION: Is $\alpha$ satisfiable? (Is there a truth assignment to
+$x_1,\ldots,x_n$ such that $\alpha$ is true?)
+
+Cook's Theorem: SAT$\in${\bf NPC}. (Need to prove (1) SAT$\in${\bf NP}
+and (2) $\forall\Pi\in${\bf NP}, $\Pi\propto_p$SAT.)
+
+\end{itemize}
+
+\subsection{NP-complete problems}
+
+\begin{itemize}
+
+\item How to prove $\Pi$ is {\bf NP}-complete:
+
+\begin{itemize}
+
+\item Show that $\Pi\in${\bf NP}.
+
+\item Choose a known {\bf NP}-complete $\Pi'$.
+
+\item Construct a reduction $f$ from $\Pi'$ to $\Pi$.
+
+\item Prove that $f$ is a polynomial reduction by showing that
+(1) $f$ can be computed in polynomial time and (2) $\forall I'$ for
+$\Pi'$, $I'$ is a yes-instance for $\Pi'$ if and only if $f(I')$ is
+a yes-instance for $\Pi$.
+
+\end{itemize}
+
+\item Seven basic {\bf NP}-complete problems.
+
+\vskip 0.25cm
+\begin{center}
+\includegraphics[height=1.3in]{f29.pdf}
+\end{center}
+
+\begin{itemize}
+
+\item 3-Satisfiability (3SAT):
+
+INSTANCE: A formula $\alpha$ in CNF with each clause having
+three literals.
+
+QUESTION: Is $\alpha$ satisfiable?
+
+\item 3-Dimensional Matching (3DM):
+
+INSTANCE: $M\subseteq X\times Y\times Z$, where $X,Y,Z$ are disjoint and 
+of the same size.
+
+QUESTION: Does $M$ contain a matching, which is $M'\subseteq M$ with
+$|M'|=|X|$ such that no two triples in $M'$ agree in any coordinate?
+
+\item PARTITION:
+
+INSTANCE: A finite set $A$ of numbers.
+
+QUESTION: Is there $A'\subseteq A$ such that $\sum_{a\in A'}a=
+\sum_{a\in A-A'}a$?
+
+\item Vertex Cover (VC):
+
+INSTANCE: A graph $G=(V,E)$ and $0\le k\le |V|$.
+
+QUESTION: Is there a vertex cover of size $\le k$, where a vertex
+cover is $V'\subseteq V$ such that $\forall (u,v)\in E$, either
+$u\in V'$ or $v\in V'$?
+
+\item Hamiltonian Circuit (HC):
+
+INSTANCE: A graph $G=(V,E)$.
+
+QUESTION: Does $G$ have a Hamiltonian circuit, i.e., a tour that
+passes through each vertex exactly once?
+
+\item CLIQUE:
+
+INSTANCE: A graph $G=(V,E)$ and $0\le k\le |V|$.
+
+QUESTION: Does $G$ contain a clique (complete subgraph) of size $\ge k$?
+
+\end{itemize}
+
+\end{itemize}
+
+\newpage
+
+\subsection{Approximation algorithms}
+
+\begin{itemize}
+\item Goal: A fast algorithm (polynomial time such as $O(n)$ and
+$O(n\log n)$) that produces near-optimal solution.
+
+\item Notation:
+
+--- $\Pi$: An optimization {\bf NP}-complete problem.
+                                                                                
+--- $I$: Any instance of the problem.
+                                                              
+--- $OPT$: The exponential-time optimal algorithm.
+                                                                                
+--- $A$: A polynomial-time approximation algorithm.
+                                                                                
+--- $OPT(I)$: Optimal solution (value) for $I$ obtained by applying $OPT$.
+
+--- $A(I)$: Approximation solution (value) for $I$ when $A$ is used.
+	
+\item How good is $A$?
+                                                                          
+--- Performance ratio:
+                                                                               
+\qquad $R_A^n=\max_{\forall I: |I|=n}\{A(I)/OPT(I)\}$ for minimization problems.
+
+\qquad $R_A^n=\max_{\forall I: |I|=n}\{OPT(I)/A(I)\}$ for maximization problems.
+
+\qquad Asymptotic ratio: $R_A^\infty=\lim_{n\to\infty}\sup R_A^n$.
+                                                                                
+\qquad $R_A^n, R_A^\infty>1$. The smaller the better.
+                                                                               
+--- Relative error:
+
+\qquad $\epsilon_A^n=\max_{\forall I: |I|=n}\{|A(I)-OPT(I)|/OPT(I)\}$.
+	
+\item SET COVERING
+                                                               
+INSTANCE: A finite set $X$ and a family $F$ of subsets of $X$ such that
+$X=\cup_{S\in F}S$.
+                                                                               
+GOAL: Determine $C\subseteq F$ with the minimum size such that
+$X=\cup_{S\in C}S$, i.e., members of $C$ cover all of $X$.
+                                                                              
+The decision version of SET COVERING is {\bf NP}-complete.
+(Reduce from VERTEX COVER.)
+                                                                            
+An example of SET COVERING:
+$X=\{1,2,3,4,5,6,7,8,9,10,11,12\}$ and $F=\{S_1,S_2,S_3,S_4,S_5,S_6\}$,
+where $S_1=\{1,2,5,6,9,10\}$, $S_2=\{6,7,10,11\}$,
+$S_3=\{1,2,3,4\}$, $S_4=\{3,5,6,7,8\}$, $S_5=\{9,10,11,12\}$, and
+$S_6=\{4,8\}$. The optimal solution is $C=\{S_3,S_4,S_5\}$.
+
+An approximation algorithm based on the greedy strategy:
+	
+GREEDY-SET-COVER($X,F$)
+                                                                                
+\qquad $U\leftarrow X$
+                                                                               
+\qquad $C\leftarrow\emptyset$
+                                                                           
+\qquad while $U\not=\emptyset$ do
+                                                                             
+\qquad\quad select an $S\in F$ that maximizes $|S\cap U|$
+                                                                         
+\qquad\quad $U\leftarrow U-S$
+                                                                          
+\qquad\quad $C\leftarrow C\cup \{S\}$
+                                                                           
+\qquad return $C$
+                                                                          
+Applying GREEDY-SET-COVER to the example, we have a cover $C$ of
+size $4$ containing $S_1,S_4,S_5,S_3$.
+	
+Theorem: For any instance, GREEDY-SET-COVER finds a cover $C$ of size
+no larger than $H(\max\{|S|:S\in F\})$ times the optimal size. (Note:
+$H(d)=\sum_{i=1}^d1/i$ is the $d$th harmonic number.)
+
+{\em Proof.}\quad Let $S_i$ be the $i$th subset selected by GREEDY-SET-COVER.
+We assume that the algorithm incurs a cost of $1$ when it adds $S_i$ to $C$.
+We spread this cost of selecting $S_i$ evenly among the elements covered for 
+the first time by $S_i$. 
+Let $c_x$ denote the cost allocated to element $x\in X$.
+Each element is assigned a cost only once, when it is covered for the first
+time. If $x$ is covered for the first time by $S_i$, then
+$$c_x={1\over |S_i-(S_1\cup S_2\cup\cdots\cup S_{i-1})|}.$$
+The algorithm finds a solution $C$ of total cost $|C|$, and this cost has
+been spread out over the elements of $X$. Therefore, since the optimal
+cover $C^*$ also covers $X$, we have
+$$|C|=\sum_{x\in X}c_x\le\sum_{S\in C^*}\sum_{x\in S}c_x.$$
+The remainder of the proof rests on the following key inequality.
+For any $S\in F$,
+$$\sum_{x\in S}c_x\le H(|S|).$$
+Suppose the above is true. We have
+$$|C|\le \sum_{S\in C^*}\sum_{x\in S}c_x\le \sum_{S\in C^*}H(S)
+\le |C^*|\cdot H(\max\{|S|:S\in F\}).$$
+Now let us focus on the proof of the inequality
+$\sum_{x\in S}c_x\le H(|S|)$. For any $S\in F$ and $i=1,\ldots,|C|$,
+let
+$$u_i=|S-(S_1\cup S_2\cup\cdots\cup S_i)|$$
+be the number of elements in $S$ remaining uncovered after
+$S_1,\ldots,S_i$ have been selected by the algorithm. We define
+$u_0=|S|$ to be the number of elements in $S$, which are initially
+uncovered. Let $k$ be the least index such that $u_k=0$, so that
+every element in $S$ is covered by at least one of the
+sets $S_1,\ldots,S_k$. Then $u_{i-1}\ge u_i$ and $u_{i-1}-u_i$
+elements of $S$ are covered for the first time by $S_i$ for
+$i=1,\ldots,k$. Thus
+$$\sum_{x\in S}c_x=\sum_{i=1}^k(u_{i-1}-u_i)
+{1\over |S_i-(S_1\cup\cdots\cup S_{i-1})|}.$$
+Observe that
+$$|S_i-(S_1\cup\cdots\cup S_{i-1})|\ge|S-(S_1\cup\cdots\cup S_{i-1})|
+=u_{i-1},$$
+because the greedy choice of $S_i$ guarantees that $S$ cannot cover more
+new elements than $S_i$ does. So we obtain
+$$\sum_{x\in S}c_x\le\sum_{i=1}^k(u_{i-1}-u_i){1\over u_{i-1}}.$$
+For integer $a$ and $b$ with $a<b$,
+$$H(b)-H(a)=\sum_{i=a+1}^b{1\over i}\ge (b-a){1\over b}.$$
+Using this inequality,
+$$\sum_{x\in S}c_x\le\sum_{i=1}^k(H(u_{i-1})-H(u_i))
+=H(u_0)-H(u_k)=H(u_0)=H(|S|).$$
+                      
+Corollary: GREEDY-SET-COVER has a performance ratio of
+$\ln|X|+1$.
+
+\end{itemize}
+
+\newpage
+
+\section{Parallel Algorithms}
+
+\subsection{Introduction}
+
+\begin{itemize}
+
+\item The PRAM model: 
+
+Parallel Random Access Machine
+
+\vskip 0.25cm
+\begin{center}
+\includegraphics[height=1.4in]{f20.pdf}
+\end{center}
+
+Processors $P_0,\ldots,P_{p-1}$: (1) working synchronously (at the same pace);
+(2) communicating through the shared memory; (3) $P_i=$RAM, $\forall i$;
+(4) unit-time memory access; (5) SIMD: Single-instruction, multiple-data;
+(6) MIMD: Multiple-instruction, multiple data.
+
+\item Concurrent versus exclusive memory accesses:
+EREW, CREW, ERCW, CRCW.
+
+How to implement concurrent write: (1) common; (2) arbitrary;
+(3) priority; (4) combining.
+
+\item Pseudocode:
+
+``for all $x\in X$ in parallel do $instruction(x)$''
+
+Statement includes the following steps:
+
+(1) Assign a processor to each $x\in X$. (In constant time,
+$P_{code(x)}\Leftrightarrow x$ and $P_i\Leftrightarrow x=code^{-1}(i)$.)
+
+(2) Execute in parallel and by the assigned processors all those
+operations specified by $instruction(x)$. (The central control unit
+is used to synchronize.)
+
+Example: Find the minimum of $n$ numbers.
+
+$A$ is the array of $n$ numbers and $B$ is an auxiliary array
+(if $B[i]=1$ then $A[i]$ is not the min, but if $B[i]=0$, then
+$A[i]$ is the min). 
+$min$ stores the output.
+
+\qquad 1. for all $i$, $1\le i\le n$, in parallel do $B[i]\leftarrow 0$
+
+\qquad 2. for all ordered pairs $(i,j)$, $1\le i,j\le n$, in parallel do
+
+\qquad\qquad if $A[i]<A[j]$ $B[j]\leftarrow 1$
+
+\qquad 3. for all $i$, $1\le i\le n$, in parallel do
+
+\qquad\qquad if $B[i]=0$ $min\leftarrow A[i]$
+
+Analysis: CRCW algorithm; input size is $n$; the number of processors
+is $p=n^2$; the time is $t=\Theta(1)$. So the algorithm finds the
+minimum of $n$ numbers in constant time, using $n^2$ processors.
+
+\item Complexity of parallel algorithms: 
+
+$n$: Input size;
+
+$p$: The number of processors;
+
+$t$: The parallel running time;
+
+polylog: $O((\log n)^k)$ for some constant $k$;
+
+A parallel algorithm is efficient if it takes polylog time
+$O((\log n)^k)$ using a polynomial $O(n^c)$ number of processors;
+
+The class {\bf NC}: Nick (Pippenger)'s class, includes problems
+with efficient parallel algorithms;
+
+A parallel algorithm is optimal if $pt=O(n)$;
+
+{\bf P}-complete problems: in {\bf P} and no efficient parallel algorithms 
+have been found so far; 
+
+A hypothetical picture based on {\bf P}$\not=${\bf NP} and
+{\bf P}$\not=${\bf NC}:
+
+\vskip 0.25cm
+\begin{center}
+\includegraphics[height=1in]{f21.pdf}
+\end{center}
+
+\item Reducing the number of processors (Brent's theorem):
+
+If a $p$-processor PRAM algorithm $A$ runs in parallel time
+$t$, then for any $p'<p$ there is a $p'$-processor PRAM 
+algorithm $A'$ for the same problem that runs in parallel
+time $O(pt/p')$. (Note: $pt=p't'$.)
+
+\end{itemize}
+
+\subsection{Algorithmic technique 1: Pointer jumping}
+
+\begin{itemize}
+
+\item Manipulating lists with pointers
+
+\item Example 1. List ranking.
+
+$L$ is a list of $n$ elements, where $next[i]$ points to the next element
+following $i$ in $L$. Output $rank[i]$, $\forall i\in L$, is the rank/order
+number of $i$ in $L$. $rank[i]=0$ if $next[i]=nil$ and
+$rank[i]=rank[next[i]]+1$ if $next[i]\not=nil$.
+
+Assign a process to each element in $L$.
+
+Each node in the list has two fields: $rank$ and $next$.
+
+\vskip 0.25cm
+\begin{center}
+\includegraphics[height=1.3in]{f22.pdf}
+\end{center}
+
+$ListRanking(L)$
+
+\qquad for all $i\in L$ in parallel do
+
+\qquad\qquad if $next[i]=nil$ $rank[i]\leftarrow 0$
+
+\qquad\qquad else $rank[i]\leftarrow 1$
+
+\qquad while $\exists i$ such that $next[i]\not=nil$ do
+
+\qquad\qquad for all $i\in L$ in parallel do
+
+\qquad\qquad\qquad if $next[i]\not=nil$
+
+\qquad\qquad\qquad\qquad $rank[i]\leftarrow rank[next[i]]+rank[i]$
+
+\qquad\qquad\qquad\qquad $next[i]\leftarrow next[next[i]]$
+
+Analysis: $p=n$ and $t=O(\log n)$.
+
+\item Example 2. Prefix computation.
+
+Input: $x_1,x_2,\ldots,x_n$.
+
+Output: $y_1,y_2,\ldots,y_n$ such that $y_1=x_1$ and 
+$y_i=y_{i-1}\otimes x_i=x_1\otimes\cdots\otimes x_i$, where
+$\otimes$ is any associative binary operator.
+
+Define $[i,j]=x_i\otimes\cdots\otimes x_j$, $1\le i\le j\le n$.
+Then $[i,i]=x_i$ and $[i,j]=[i,k]\otimes [k+1,j]$, $1\le i\le k<j\le n$.
+
+We wish to compute $[1,i]$, $1\le i\le n$.
+
+\vskip 0.25cm
+\begin{center}
+\includegraphics[height=1.3in]{f23.pdf}
+\end{center}
+
+$ListPrefix(L)$
+
+\qquad for all $i\in L$ in parallel do
+
+\qquad\qquad $y[i]\leftarrow x[i]$
+
+\qquad while $\exists i\in L$ such that $next[i]\not=nil$ do
+
+\qquad\qquad for all $i\in L$ in parallel do
+
+\qquad\qquad\qquad if $next[i]\not=nil$
+
+\qquad\qquad\qquad\qquad $y[next[i]]\leftarrow y[i]\otimes y[next[i]]$
+
+\qquad\qquad\qquad\qquad $next[i]\leftarrow next[next[i]]$
+
+\item Example 3. Computing the depth of each node in an $n$-node
+binary tree.
+
+\vskip 0.25cm
+\begin{center}
+\includegraphics[height=1.9in]{f24.pdf}
+\end{center}
+ 
+The algorithm contains two steps. One is to construct the so-called
+Euler tour. The second step is to do a prefix computation, which
+requires $3n$ processors in $O(\log n)$ parallel time. 
+
+How to construct an Euler tour in $O(1)$ parallel time with $n$ processors:
+
+\qquad for all nodes $i$ in the tree in parallel do
+
+\qquad\qquad if left child $j$ exists
+
+\qquad\qquad\qquad make $i.A$ to point to $j.A$
+
+\qquad\qquad\qquad make $j.C$ to point to $i.B$
+
+\qquad\qquad else make $i.A$ to point to $i.B$
+
+\qquad\qquad if right child $k$ exists
+
+\qquad\qquad\qquad make $i.B$ to point to $k.A$
+
+\qquad\qquad\qquad make $k.C$ to point to $i.C$
+
+\qquad\qquad else make $i.B$ to point to $i.C$
+
+\vskip 0.25cm
+\begin{center}
+\includegraphics[height=4in]{f25.pdf}
+\end{center}
+
+\end{itemize}
+
+\subsection{Algorithmic technique 2: Balanced binary tree}
+
+\begin{itemize}
+
+\item Each internal node represents the computation of a subproblem.
+
+\item The root represents the computation of the overall problem.
+
+\item Bottom-up design.
+
+\item Parallel time is at least the height of the tree.
+
+\item Example: Computing the minimum of $n$ numbers.
+
+\vskip 0.25cm
+\begin{center}
+\includegraphics[height=1.1in]{f26.pdf}
+\end{center}
+
+\item $p={n\over2}$ and $t=\log n$.
+
+\end{itemize}
+
+\subsection{Algorithmic technique 3: Divide and conquer}
+
+\begin{itemize}
+
+\item Top-down design with subproblems solved in parallel.
+
+\item Parallel time is at least the depth of the recursion.
+
+\item Example: Given a polynomial $p(x)$ of degree $n=2^k-1$.
+Evaluate $p(x)$ at $x=x_0$. 
+
+$p(x)=x^{n+1\over2}q(x)+r(x)$, where $deg(q)=2^{k-1}-1$
+and $deg(r)\le 2^{k-1}-1$. 
+
+\vskip 0.25cm
+\begin{center}
+\includegraphics[height=2.3in]{f27.pdf}
+\end{center}
+
+Depth is $O(\log n)$. So is the parallel time.
+
+\end{itemize}
+
+\subsection{Algorithmic technique 4: Compression and collapsing}
+
+\begin{itemize}
+
+\item Example: Finding the minimum.
+
+$A[i]$ and $A[i+1]$ is compressed to $\min\{A[i],A[i+1]\}$ for odd $i$.
+
+$[3,7,8,3,9,2,3,1]\Rightarrow [3,3,2,1]\Rightarrow [3,1]
+\Rightarrow [1]$.
+
+\item Example: Graph algorithms: Compress a graph recursively into
+a single (super-)vertex.
+
+\item Example: Euler tour: Collapse a node into three subnodes.
+
+\end{itemize}
+
+\end{document}
+
