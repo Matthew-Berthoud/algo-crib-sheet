@@ -369,7 +369,73 @@ Similar to average case, but using randomly generated inputs instead of probabil
 
     \textbf{6. Dynamic Programming}
 
-    ln6
+    \textbf{6.1 Introduction}
+
+Divide and Conquer = top-down, recursive
+
+Dynamic Programming = bottom-up, tabular,
+store results of sub-problems to avoid re-computing
+
+Eg. Fibonacci is $O(n)$ with DP, instead of $\Theta(1.618^n)$ with D\&C, since it stores previous answers
+
+    \textbf{6.2 Making change} (example)
+
+Let $n$, a positive integer, be the number of different
+types of coin in a country. Let $coin[1..n]$, an array of
+positive integers, be the values of these $n$ types of coin. Let
+$m$, a positive integer, be the amount of change that one wishes to make.
+Design a dynamic programming algorithm that determines whether $m$
+can be made with the coins, and if so, computes the minimum number of coins
+needed.
+
+Define $count(i)$ to be the minimum number of coins to
+make $i$ ($>0$). That $count(i)=\infty$ implies that no solution
+exists. The recursive definition of $count(i)$ is as follows.
+
+$count(1)=\infty$ if $1\not\in coin[\ ]$.
+
+$count(coin[j])=1$ for $j=1,\ldots,n$.
+
+$count(i)=1+\min_{1\le j\le n,coin[j]<i}\{count(i-coin[j])\}$
+
+\item The table is a 1-D table and its entries are filled from left
+to right until $count[m]$ is reached.
+
+\begin{center}
+\begin{tabular}{c|c|c|c|c}
+$i$ & $1$ & $2$ & $\cdots$ & $m$\\\hline
+$count[i]$ & $\rightarrow$ & $\rightarrow$ & $\cdots$ & $*$\\
+\end{tabular}
+\end{center}
+
+Algorithm:
+
+\qquad for $i\leftarrow 1$ to $m$ $count[i]\leftarrow -1$
+
+\qquad $count[1]\leftarrow\infty$
+
+\qquad for $j\leftarrow 1$ to $n$
+
+\qquad\qquad $count[coin[j]]\leftarrow 1$
+
+\qquad for $i\leftarrow 1$ to $m$
+
+\qquad\qquad if $count[i]=-1$
+
+\qquad\qquad\qquad $min\leftarrow\infty$
+
+\qquad\qquad\qquad for $j\leftarrow 1$ to $n$
+
+\qquad\qquad\qquad\qquad if $coin[j]<i$ 
+              
+\qquad\qquad\qquad\qquad\qquad if $min>count[i-coin[j]]$
+
+\qquad\qquad\qquad\qquad\qquad\qquad $min\leftarrow count[i-coin[j]]$
+
+\qquad\qquad\qquad $count[i]\leftarrow 1+min$
+ 
+Time complexity: $\Theta(mn)$. (pseudo-polynomial)
+
 
 
     \textbf{7. The Lower Bound Theory}
