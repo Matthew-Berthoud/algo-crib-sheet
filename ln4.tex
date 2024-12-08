@@ -1,0 +1,70 @@
+\\
+$\rightarrow$ solve optimization problems with solutions consisting a sequence of choices. 
+
+1. Make the best choice at the moment
+2. Never changes the choices
+3. Not always optimal
+
+Examples: coin exchange, knapsack, bin packing, kruskal's MST, Dijkstra's 
+
+General algorithm:
+
+1. Define: Select(x), S (solution set), C (set of choices) \\
+2. While S is not solution and $C \neq \phi$ \\
+3. Select a choice x from C that optimizes Select(x) \\
+4. Add x to S if feasible; remove x from C
+
+$\rightarrow$ To prove that the greedy algorithm is optimal:
+
+\textbf{Proof by transformation:} Use when multiple optimal solutions exist. Steps:
+
+1. Define greedy $G$ and optimal $O$ solutions\\
+2. Transform $O$ into $G$ by replacing some choices from $G$
+3. Check if the transformed $O$ isn't worse than the optimal solution
+4. If yes, $G$ solution is optimal (since transformed $O$ is equal to $G$)
+
+\textbf{Proof by contraction:} Use when optimal solution is unique. Steps:
+
+1. Assume greedy solution is different from optimal solution\\
+2. Tweak/Change the optimal solution and check if it is better than the greedy solution (it's not - a contradiction)\\
+3. Greedy solution is same as optimal
+
+\textbf{Activity Selection:} Select a sequence of activities from $S = \{1,2,3,...,n\}$ with start and finish times: $s_i$ and $f_i$, such that any two activities do not overlap ($f_i \le s_j$ or $f_j \le s_i$). In this case, earliest finishing activity first (EFAF) is optimal.
+
+To prove the greedy schedule $G$ in EFAF is optimal $O$, let's use "Proof by transformation". 
+
+1. For every activity $k$ in $O$\\
+2. Find an activity $a$ in $G-O$ with earliest finish time such that $f_a < f_k$ and $s_a \ge f_{k-1}$ (where $k-1$ is immediate predecessor of $k$)
+3. Replace $k$ from $O$ with $a$
+4. Finally check if $O$ is same as $G$
+
+\textbf{Scheduling with deadlines:} TODO
+% TODO: come back to this later
+
+\textbf{Min average completion time:} A set of n jobs: $\{J_1,...,J_n\}$ with processing times: $p_1,p_2,...,p_n$. Completion time for job is start time ($s_j$) + $p_j$. Goal is to minimize the avg. completion time (${1 \over n} \sum_{j=1}^{n} c_j$) 
+
+Ordering by Shortest-Job First (SJF) gives the greedy solution. To prove its optimality, we can use "Proof by Contradiction":
+
+1. Assume greedy solution (SJF), $G$ is different than optimal solution $O$\\
+2. Let's say we have two jobs $J_a (p_a = 4, c_a = 4)$ and $J_b (p_b = 7, c_b = 11)$ in $O$. On swapping the two we get $J_b (p_b = 7, c_b = 7)$ and $J_a (p_a = 4, c_a = 11)$ the avg completion time will increase. (a contradiction)\\
+2. The greedy solution (SJF) should be optimal
+
+\textbf{Parallel scheduling problem:} A set of independent jobs $1,2,...,n$, scheduled in $m$ processors, with each job requiring $p_j$ processing time. Goal is to find a schedule with min. makespan (ie. $C = max_j\{c_j\}$). (Online scheduling algorithm where jobs arrive sequentially)
+
+Shorted-Execution Time:\\
+1. total time for job $j$ in $k$ processors is: $t_j(k) = p_j/k + (k-1)*c $\\
+2. $t_j$ is min. when $k_j = min\{m, \lfloor \sqrt{p_j / c} \rfloor\}$, where $k_j$ is \# of processors that minimizes $t_j$\\ 
+3. For $m=3, n=6, c=1$, Min. makespan, $C = 14$
+% TODO: omit the table in final print
+\begin{center}
+    \begin{tabular}{ |l|r|r|r|r|r|r| } 
+        \hline
+        j & 1 & 2 & 3 & 4 & 5 & 6 \\
+        \hline
+        $p_j$ & 4 & 1 & 4 & 1 & 9 & 4 \\
+        $k_j$ & 2 & 1 & 2 & 1 & 3 & 2 \\
+        $t_j$ & 3 & 1 & 3 & 1 & 5 & 3 \\
+        $s_j$ & 0 & 0 & 3 & 1 & 6 & 11 \\
+        $c_j$ & 3 & 1 & 6 & 2 & 11 & \textbf{14} \\
+    \end{tabular}
+\end{center}
