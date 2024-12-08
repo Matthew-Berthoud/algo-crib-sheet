@@ -1,0 +1,158 @@
+\textbf{7. The Lower Bound Theory}
+
+Upper Bound $(O(f(n)))$: - always parired with an algorithm - is the amount of time sufficient to solve the problem
+
+Lower Bound $(g(n)\ if\ \Omega(g(n)))$: - paired with the problem - is the amount of time necessary to solve by algorithm within the model
+
+Optimality of algorithm :- If $f(n) = \Omega(g(n))$, we say we found the most efficient algo possible, except for hidden multiplicative constant.
+
+\textbf{7.2 Trivial Lower bounds by Input/Output}
+
+\begin{itemize}
+    \item Sometimes, we can use the amt of input data an algo needs to process or amt of data an algo needs to produce to establish trivial lower bounds.
+    \item E.g. in 2x2 matrix multiplication, since there are $n^2$ entries to compute, $n^2$ is obviously a lower bound.
+    \item Some bounds established by input/output are not correct lower bounds. e.g. searching in a sorted array of n elements does not require checking all n elements.
+    \item Some lower bounds established by input/output are not trivial to prove.
+\end{itemize}
+
+\textbf{7.3 Decision Tree Method}
+\begin{itemize}
+    \item \textbf{Comparison based model for proving worst-case lower bound}
+    Decision Tree made for sorting by comparisons. Each interior node reps a comaparison. Each edge is an outcome ( $\le$ or $\ge$). Each leaf is a possible output (a sorted list). Each path from the root to a leaf represents the steps of sorting a certain type of input. There are $n!$ leaves in the tree, corresponding to $n!$ permutations. The height of the tree gives the max no. of comparisons in the algo, \textbf{and thus is the worst case time complexity.} 
+    \item \textbf{How to use a decision tree to establish a lower bound}
+    For each comp-based sorting algo ($A_i$), there is a decision tree, $T_i$. Let $height(T_i)$ be the height of $T_i$, thus the worst-case time of $A_i$. Obviously, $\min_i\{height(T_i)\}$ is a lower bound to the problem.
+
+    \item \textbf{Theorem: Any comparison-based sorting algorithm requires
+    $\Omega(n\log n)$ time in the worst case.}
+
+    {\em Proof}\quad Let $T$ be a decision tree for any algorithm that
+    sorts $n$ elements by comparisons. $T$ has $n!$ leaves. So the height
+    of the tree, $h$, is at least $\log n!$. (Assume not. Then $h<log n!$.
+    By the lemma, the number of leaves in the tree is at most $2^h<2^{log n!}
+    =n!$, which is impossible.) So for any sorting algorithm, the worst-case
+    time complexity is the height of the decision tree, thus at least $\log n!
+    =\Omega(n\log n)$.
+
+    \item \textbf{Theorem: Any comparison-based sorting algorithm requires $\Omega(nlogn)$ time in the average case.}
+    
+\end{itemize}
+
+\textbf{7.4 Adversary Method}
+\begin{itemize}
+    \item Finding the max and min at the same time:
+
+    Let $C_{1,n}(n)$ be the number of comparisons necessary and
+    sufficient to find the maximum and minimum of $n$ integers.
+    Prove that $C_{1,n}(n)=\lceil{3n\over2}\rceil-2$.
+    
+    Upper bound: $C_{1,n}(n)\le\lceil{3n\over2}\rceil-2$. Wish
+    to design an algorithm which takes at most $\lceil{3n\over2}\rceil-2$
+    comparisons. The algorithm first uses $n-1$ comparisons to find the
+    maximum among the $n$ numbers and then $\lceil{n\over2}\rceil-1$ 
+    more comparisons to find the minimum among the $\lceil{n\over2}\rceil$
+    non-winners in the first round.
+    
+    Lower bound: $C_{1,n}(n)\ge\lceil{3n\over2}\rceil-2$.
+    Assume all keys are distinct. At any time in any algorithm,
+    there are four kinds of elements.
+    Novice: not compared yet; Winner: always wins so far; Loser: always loses so far; Moderate: wins some and loses some.
+    
+    Define a state $(i,j,k,l)$, where $i$, $j$, $k$, and $l$ are
+    the numbers of novices, winners, losers, and moderates, respectively.
+    The initial state is $(n,0,0,0)$ and the final state is $(0,1,1,n-2)$.
+    \textbf{Question}: What is the minimum number of comparisons from the initial
+    state to the final state? A state transition table is given below:
+    
+    \begin{center}
+    \begin{tabular}{r|l}
+    & $(i,j,k,l)$\\\hline
+    NN & $(i-2,j+1,k+1,l)$\\
+    NW & $(i-1,j,k,l+1)$ or $(i-1,j,k+1,l)$\\
+    NL & $(i-1,j+1,k,l)$ or $(i-1,j,k,l+1)$\\
+    NM & $---$\\
+    WW & $(i,j-1,k,l+1)$\\
+    WL & $(i,j,k,l)$ or $(i,j-1,k-1,l+2)$\\
+    WM & $---$\\
+    LL & $(i,j,k-1,l+1)$\\
+    LM & $---$\\
+    MM & $---$
+    \end{tabular}
+    \end{center}
+    
+    Assume that an adversary provides the input and uses the following
+    strategy:
+    
+    
+    :: algorithm : NN : NW : NL : WW : WL : LL :: \\
+    :: adversary : arbitrary : W wins : N wins : arbitrary : W wins : arbitrary ::
+   
+    
+    Why is the adversary able to make the choices it does in the table
+    above? For an NW comparison, it can make N to be arbitrarily small 
+    so that W is the winner. For the similar reason in an NL comparison,
+    it can make N to be arbitrarily large so that L is the loser.
+    In a WL comparison, the adversary can increase W (or decrease L) so
+    that W beats L without changing the outcomes of the previous
+    comparisons. Since the algorithm cannot see the numbers but only
+    the comparison results, this action by the adversary is totally
+    legal. 
+    
+    In the initial state, $i+j+k=n$, while in the final state 
+    $i+j+k=2$. Since only a WW or LL comparison decreases $i+j+k$
+    (by 1), we need to make at least $n-2$ WW or LL comparisons.
+    Next consider the change of $i$ in the initial and final states.
+    It decreases from $i=n$ to $i=0$. Since WW and LL comparisons
+    never change the value of $i$, some NN, NW, NL comparisons are
+    needed. Since such a comparison decreases $i$ by at most $2$,
+    a minimum of $\lceil{n\over2}\rceil$ comparisons are needed.
+    So the total number of comparisons necessary is
+    $n-2+\lceil{n\over2}\rceil=\lceil{3n\over2}\rceil-2$.
+     
+\end{itemize}
+\textbf{7. 5 Reduction}
+
+\begin{itemize}
+
+\item Proving lower bounds by reduction:
+
+Let $P$ be the problem whose lower bound, $f(n)$, we wish to prove.
+Let $Q$ be a problem whose lower bound, $g(n)$, is known. For any 
+algorithm $A$ for $P$, we try to define an algorithm $B$ for $Q$ which
+calls $A$.
+
+
+We assume that there is an algorithm, say $A$, for $P$ that takes
+time $o(f(n))$. Then from the chart above, there is an algorithm,
+$B$, for $Q$, with time $t_1(n)+o(f(n))+t_2(n)$. If $t_1(n)+o(f(n))+t_2(n)
+=o(g(n))$, then we just found an algorithm which beats the proven
+lower bound, $g(n)$, for $Q$. This is of course impossible. 
+So there is no algorithm for $P$ with time faster than $f(n)$.
+Therefore, $f(n)$ is a lower bound for $P$.
+
+\item The convex hull problem: Given a set $P$ of $n$ points on the 2-D plane.
+The {\em convex hull} of the point set, denoted by $CH(P)$, is a convex
+polygon, represented by its vertices in counterclockwise order, say,
+$p_1, p_2, \ldots, p_k$, where $p_i\in P$ for $i=1, 2, \ldots, k$,
+such that the polygon contains all the other points in $P$. See the
+following figure for an example.
+
+\item Next we will prove that any algorithm that finds $CH(P)$ for a given
+$P$ of $n$ points takes at least $n\log n$ time in the worst case.
+
+Assume there is an algorithm $A$ for the convex hull problem which
+takes $o(n\log n)$ worst-case time. Now we will design a sorting
+algorithm $B$ that calls $A$. For any input list of $n$ numbers
+$x_1, x_2, \ldots, x_n$, algorithm $B$ first converts the list in $O(n)$
+to a point set $(x_1, x_1^2), (x_2, x_2^2), \ldots, (x_n, x_n^2)$
+and feed the point set as input to algorithm $A$. Algorithm $A$ then
+computes the convex hull of the point set in $o(n \log n)$ time.
+Because of the special locations of the points, the convex hull will
+contain all points as the vertices of the polygon, and the points
+are output in counterclockwise order. Algorithm $B$ then spends $O(n)$
+to search the point in the output list with the smallest $x$-coordinate,
+and from there to produce a list of $n$ $x$-coordinates, which is clearly
+the sorted version of the original input list to $B$. So algorithm $B$
+sorts a list of $n$ numbers in time $O(n)+o(n\log n)+O(n)=o(n\log n)$.
+This is a contradiction to the $\Omega(n\log n)$ lower bound for sorting.
+
+\end{itemize}
