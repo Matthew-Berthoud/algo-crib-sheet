@@ -17,15 +17,51 @@ root acts as the set representative
 second pass updates all the nodes in the path to point to root
 
 % complexity
-(worst-case) $T(n) = O(m\alpha(n))$, where m = total operations, n = \# of elements, 
+(amortized) $T(n) = O(m\alpha(n))$, where m = total operations, n = \# of elements, 
 $\alpha(n) (\le 4)$ is a very slowly growing fun (inverse Ackermann's fun)
-% the "Properties about ranks:" bit can be skipped as it proves the time 
-% complexity of UnionFind is slowly growing: O(mlog*n) or O(mα(n))
+
+\textbf{Some properties of ranks}\\
+Let $\sigma'$ be $\sigma$ with all finds removed. Let $Forest(\sigma')$
+be the forest resulting from executing $\sigma'$.
+
+P1: Any tree has no larger than $q+1$ nodes in $Forest(\sigma')$. (Branches).
+
+P2: Node $i$ has at least $2^{r(i)-1}$ descendants (including $i$)
+in $Forest(\sigma')$. (Induct on $r(i)$. Consider the subtree rooted
+at node $i$, which must be constructed by some union operations. There
+must be a union operation that 
+merges a smaller-size tree with height $r(i)-1$
+to a tree rooted at $i$. Thus the number of nodes in the tree
+obtained after the union is at least $2\cdot 2^{r(i)-2}=2^{r(i)-1}$.)
+
+P3: $r(i)\le \lfloor\log (q+1)\rfloor+1$, for any $i$. 
+(By contradiction, assume $r(i)\ge \lfloor\log (q+1)\rfloor+2$.
+By P2, the number of descendant is at least $2^{\lfloor\log (q+1)\rfloor+1}
+>2^{\log (q+1)}=q+1$. A contradiction to P1.)
+
+P4: There are at most ${n\over 2^{r-1}}$ nodes of rank $r$. 
+(By contradiction, assume for some rank $r$ there are more than 
+${n\over 2^{r-1}}$ nodes with rank $r$. By P2 each node has at least $2^{r-1}$
+descendants. The number of nodes in these (disjoint) subtrees is more than
+${n\over 2^{r-1}}\cdot 2^{r-1}=n$. A contradiction!)
+
+P5: At any time during the execution of $\sigma$, the ranks of the nodes
+on a path from a leaf to a root increase strict monotonically.
+(For nodes $w$ and $v$, if $w$ is a proper descendant of $v$ at some time of executing $\sigma$,
+then they must still have the same descendant-ancester relation in $Forest(\sigma')$. So $r(w)<r(v)$.)
+
+1. $F(0) = 1$, $F(n) = 2^{F(n-1)}$ for $n \ge 1$. $G$ is inversion of $F$. \\
+2. $G(n) = min\{k \ge 0 | F(k) \ge n\}$; $F$ grows extremely fast; $G(n)$ measures iterations needed for $F(k)$ to surpass or match $n$ 
+3. $G(F(n)) = n$ and $G(n) = \log^*(n)$\\
+4. Ranks are distributed into groups; $G(0) = {0,1}$, $G(1) = {2}$, $G(2) = {3,4}$...\\
+5. Total cost of executing $\sigma$ with $m=q+p$ operations is:  
+a) cost of $q$'s $union$ b) cost of $p$'s $find$; $T(n) = O(q+pG(n)+nG(n))$ (pessimistic) = $O(mlog^*(n))$ if $m=\Theta(n)$ (tight bound by amortized analysis)
+
 
 % including notes on two heaps for completeness - although I don't think we did
 % problems on heaps or studied it in class?
 % binary heaps
-Binary Heaps: 
+\textbf{Binary Heaps:} 
 1. max heap property - parent is no smaller(or $\ge$) than its children;
 2. as an array ($H[n]$) - for $H[i]$ , parent = $H[\lfloor i/2 \rfloor]$, 
 left child = $H[2i]$, right child = $H[2i+1]$
@@ -37,7 +73,7 @@ $FindMax(H)-O(1)$, $MakeHeap(H)-O(n)$
 5. \href{https://www.mimuw.edu.pl/~erykk/algovis/heapsort.html}{Heap Sort Viz.}
 
 % fibonacci heaps
-Fibonacci Heaps/Mergeable Heaps: 
+\textbf{Fibonacci Heaps/Mergeable Heaps: }
 1. implemented using binary heaps
 2. new operations: $Union(H_1,H_2)-O(n)$, $DecreaseKey(H,x,k)-O(log(n))$, 
 $Delete(H,x)-O(log(n))$
