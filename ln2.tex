@@ -1,0 +1,185 @@
+
+    % \textbf{2.1 Overview}
+
+    \textbf{2.2 Worst-Case Analysis}
+    
+Insertion\_Sort($A$)
+\par\quad for $j\leftarrow 2$ to $n$
+\par\quad\quad $key\leftarrow A[j]$
+\par\quad\quad $i\leftarrow j-1$
+\par\quad\quad while $i>0$ and $A[i]>key$
+\par\quad\quad\quad $A[i+1]\leftarrow A[i]$
+\par\quad\quad\quad $i\leftarrow i-1$
+\par\quad\quad $A[i+1]\leftarrow key$
+
+To insert $A[j]$ into the sorted $A[1\ldots j-1]$, the algorithm
+will make at most $j-1$ comparisons and $j-1$ shifts. So the overall 
+time complexity,
+which is dominated by the number of comparisons and the number of
+shifts, is at most $2\sum_{j=2}^n(j-1)
+=\Theta(n^2)$.
+
+
+
+Euclid's algorithm (300 B.C.): Greatest common divisor.
+
+If $n\not=0$, then $gcd(m,n)=gcd(n, m \bmod n)$;
+
+If $n=0$, then $gcd(m,n)=m$.
+
+Euclid($m,n$)\qquad //Assume $m\ge n$
+\par\quad while $n>0$
+\par\quad\quad $t\leftarrow m\bmod n$
+\par\quad\quad $m\leftarrow n$
+\par\quad\quad $n\leftarrow t$
+\par\quad return $m$
+
+The time complexity of the algorithm is determined by the number of iterations
+of the while-loop. Let it be $k$. Also let $m_i$ and $n_i$ be the values of
+$m$ and $n$ at the end of the $i$th iteration, respectively.
+
+We observe that (1) $n_k=0$, $n_i\ge 1$ for $i<k$, and 
+$n_0>n_1>\cdots>n_k$; (2) $m_i=n_{i-1}$, which implies that $m_i\ge n_i$ 
+for $i\ge1$; (3) $n_i=m_{i-1} \bmod n_{i-1}<{m_{i-1}\over2}={n_{i-2}\over2}$
+for $i\ge2$. (Note: If $a\ge b$, then $a\bmod b<{a\over2}$.)
+
+We then have $1\le n_{k-1}<{n_{k-3}\over2}<{n_{k-5}\over2^2}<\cdots<
+{(n_1,n_0)\over2^{\lceil k/2\rceil-1}}\le {n_0\over2^{\lceil k/2\rceil-1}}$.
+
+Thus, ${k\over2}-1\le\lceil{k\over2}\rceil-1<\log n_0$,
+which implies $k\le 2+2\log n_0$.
+
+So $T(m,n)=O(k)=O(\log n)$.
+
+
+
+Multiplying two integers $x$ and $y$: 
+
+Assume that $x$ (multiplicand) and $y$ (multiplier) 
+have the same number of figures, $n=2^k$,
+denoted $(x)_n$ and $(y)_n$.
+Then $(x)_n=10^{n\over2}\cdot(a)_{n\over2}+(b)_{n\over2}$ and
+$(y)_n=10^{n\over2}\cdot(c)_{n\over2}+(d)_{n\over2}$.
+
+So $(x)_n\cdot(y)_n=10^n((a)_{n\over2}\cdot (c)_{n\over2})+
+10^{n\over2}((a)_{n\over2}\cdot (d)_{n\over2}+ (b)_{n\over2}\cdot
+(c)_{n\over2})+(b)_{n\over2}\cdot (d)_{n\over2}$. The problem of 
+multiplying two integers of size $n$ is now reduced to four subproblems
+of multiplying two integers of size $n\over2$.
+
+$T(n)=4T({n\over2})+n=\Theta(n^2)$ by the master theorem.
+
+Now let $s=(a)_{n\over2}\cdot (c)_{n\over2}$,
+$t=(b)_{n\over2}\cdot (d)_{n\over2}$, and
+$r=((a)_{n\over2}+(b)_{n\over2})\cdot((c)_{n\over2}+(d)_{n\over2})$.
+Then $(x)_n\cdot(y)_n=10^ns+10^{n\over2}(r-s-t)+t$. Only three
+subproblems have to be solved in the recursion.
+
+$T(n)=3T({n\over2})+n=\Theta(n^{\log_23})=\Theta(n^{1.585})$ 
+by the master theorem.
+
+
+    \textbf{2.3 Average-Case Analysis}
+
+Insertion sort:
+
+Assumptions: (1) Distinct items; (2) Each permutation with equal
+probability to occur.
+
+$T(n)=$ average \# of pairwise comparisons $=\sum_{j=2}^n c_j$, where
+$c_j$ is the average \# of comparisons to insert $A[j]$ ($key$) into the sorted
+$A[1\ldots j-1]$. For $key$, there are $j$ possible positions, with 
+probability ${1\over j}$ for each.
+
+So $c_j={1\over j}\cdot 1+{1\over j}\cdot 2+\cdots+{1\over j}\cdot (j-1)
++{1\over j}\cdot (j-1)={1\over2}(j+1)-{1\over j}$.
+
+Therefore, $T(n)=\sum_{j=2}^n({1\over2}(j+1)-{1\over j})
+={1\over4}n^2+{3\over4}n-H_n=\Theta(n^2)$.
+
+
+Binary search
+
+Given $A[1\ldots n]$ sorted and $x$ (a query). Is $x$ a member of $A$?
+
+
+Assumptions: (1) $x\in A$; (2) Distinct items in $A$; (3)
+$Pr(x=A[i])={1\over n}$ for any $i=1,2,\ldots,n$; (4) $n=2^k-1$ for some $k$.
+
+Binary search $\Rightarrow$ Decision tree of $n$ nodes (full binary tree
+with $k$ levels).
+
+Average-case time $\Rightarrow$ Average length of a path from the root to
+a tree node.
+
+\begin{center}
+\begin{tabular}{l|l|l}
+Level & \# of nodes & average length\\ \hline
+1 & 1 & ${1\over n}\cdot 1$\\
+2 & 2 & ${2\over n}\cdot 2$\\
+3 & 4 & ${4\over n}\cdot 3$\\
+$\cdots$ & $\cdots$ & $\cdots$\\
+$k$ & $2^{k-1}$ & ${2^{k-1}\over n}\cdot k$
+\end{tabular}
+\end{center}
+
+\begin{eqnarray*}
+T(n)&=&\sum_{i=1}^k {2^{i-1}\over n}\cdot i\\
+&=&{1\over n}\sum_{i=1}^k i\cdot 2^{i-1}\\
+&=&{1\over n}(k\cdot 2^k-2^k+1)\\
+&=&k+{k\over n}-1\\
+&=&\Theta(\log n)
+\end{eqnarray*}
+
+
+Binary search trees (BST)
+
+What is the average number of comparisons needed to insert $n$
+distinct random elements into an initially empty BST?
+
+$T(0)=T(1)=0$.
+
+Assume that $A=(a_1,\ldots,a_n)$ is the list given and that 
+$B=(b_1,\ldots,b_n)$ is $A$ sorted increasingly.
+That $A$ is a random sequence implies that $a_1$ is equally likely
+to be $b_j$ for any $1\le j\le n$. Consider the tree obtained after
+the insertion of all $n$ numbers.
+
+So $T(n)={1\over n}\sum_{j=1}^n(n-1+T(j-1)+T(n-j))=n-1+{2\over n}
+\sum_{j=0}^{n-1}T(j)$ for $n\ge2$.
+
+To solve this recurrence, we guess $T(n)=O(n\log n)$, i.e., 
+$T(n)\le cn\ln n$ for some $c$. We prove by induction that
+this is indeed the case.
+
+When $n=1$, $T(n)=0\le c\cdot 1\cdot \ln 1$ for any $c$. So the
+basis holds. Assume that when $j\le n-1$, $T(j)\le cj\ln j$.
+Now consider $n$.
+\begin{eqnarray*}
+T(n)&=&n-1+{2\over n}\sum_{j=0}^{n-1}T(j)\\
+&\le&n-1+{2\over n}\sum_{j=1}^{n-1}cj\ln j\\
+&\le&n-1+{2\over n}c\int_2^n x\ln xdx\\
+&\le&n-1+{2\over n}c({1\over2}n^2\ln n-{1\over4}n^2)\\
+&=&n-1+cn\ln n-{c\over2}n\\
+&\le&cn\ln n { \quad for\ \ } c\ge  2
+\end{eqnarray*}
+
+
+    \textbf{2.4 Amortized Analysis}
+
+average over successive operations,
+average the time per operation over a worst-case sequence.
+It guarantees the average performance of each operation in the worst case.
+
+Techniques:
+(1) Aggregate analysis: get overall worst case $T(n)$, amortized cost per operation is $T(n) / n$.
+(2) Accounting method: Represent prepaid work as credit stored with speciﬁc objects within the data
+structure.
+(3) Potential method (physics): Represent prepaid work as potential energy that can be released for future operations..
+The potential is associated with the data structure as a whole rather than with speciﬁc objects within the data
+structure
+
+    \textbf{2.5 Probabilistic Analysis}
+
+Similar to average case, but using randomly generated inputs instead of probabilistic distribution.
+

@@ -1,0 +1,145 @@
+
+
+    \textbf{1.1 Common Functions}
+
+$e^x=1+x+{x^2\over 2!}+{x^3\over 3!}+\cdots$ ($e \approx 2.718$)
+
+$\lim_{n\to\infty}{(1+{x\over n})}^n=e^x$.
+
+$\log(ab)=\log a+\log b$, $\log ({a\over b})=\log a-\log b$.
+
+$\log_a b={{\log_c b}\over {\log_c a}}$.
+
+$\log_a b^n=n\log_a b\not={(\log_a b)}^n$, $a^{\log_a n}=n$,
+$a^{\log_c b}=b^{\log_c a}$.
+
+$ln(1+x)=x-{x^2\over 2}+{x^3\over 3}-{x^4\over 4}+\cdots$.
+
+$n!=n\cdot (n-1)!$, $0!=1$.
+
+Sterling's approximation: $n!=\sqrt{2\pi n}({n\over e})^n(1+
+\Theta({1\over n}))$. (Note: $\Theta$ means having the same order of 
+magnitude.) The following approximation also holds:
+$n!=\sqrt{2\pi n}({n\over e})^ne^{\alpha_n}$, where
+${1\over 12n+1}<\alpha_n<{1\over 12n}$.
+
+$\log n!=\Theta(n\log n)$.
+
+Log star function: how many times log must be applied before the result is $\le 1$:
+
+$\log^* n=\min\{i\ge0:\log^{(i)}n\le1\}$
+
+$\log^*2=1$, $\log^* 4=2$, $\log^*16=3$, $\log^*65536=4$, $\log^*2^{65536}=5$
+
+    \textbf{1.2 Asymptotic Notation}
+
+% Big vs. Little O explained: https://stackoverflow.com/questions/1364444/difference-between-big-o-and-little-o-notation
+
+\item $f(n)=O(g(n))$ if $\exists c, n_0$ such that 
+$f(n)\le cg(n)$ for $n\ge n_0$.
+
+\item $f(n)=\Omega(g(n))$ if $\exists c, n_0$ such that
+$f(n)\ge cg(n)$ for $n\ge n_0$.
+
+\item $f(n)=\Theta(g(n))$ if $\exists c_1, c_2, n_0$ such that
+$c_1g(n)\le f(n)\le c_2g(n)$ for $n\ge n_0$.
+
+\item $f(n)=o(g(n))$ if $\forall c$ $\exists n_0$ such that
+$f(n)<cg(n)$ for $n\ge n_0$. 
+
+\item $f(n)=\omega(g(n))$ if $\forall c$ $\exists n_0$ such that 
+$f(n)>cg(n)$ for $n\ge n_0$.
+
+
+An alternative definition for $f(n)=o(g(n))$ is 
+$\lim_{n\to\infty}{f(n)\over g(n)}=0$. Likewise, an alternative definition
+for $f(n)=\omega(g(n))$ is $\lim_{n\to\infty}{f(n)\over g(n)}=\infty$.
+
+{\em Rule of thumb:} constant $\le$ polylogarithmic $\le$ polynomial
+$\le$ exponential $\le$ superexponential.
+
+{\em Example:} $1$, $\sqrt{\log n}$, $\ln n$, $(\log n)^2$, $\sqrt n$,
+$\sqrt n \log n$, $10n$, $n\log n$, $n^2$, $n^{\log\log n}$,
+$2^n$, $n2^n$, $n!$, $2^{2^n}$.
+
+Taking logarithms helps: $f(n)=O(g(n))$ iff $\log f(n)=O(\log g(n))$.
+
+
+    \textbf{1.3 Summations/Series}
+
+Arithmetic: $\sum_{i=1}^{n} i = {1\over2}n(n+1)$
+
+Geometric: $\sum_{i=0}^{n} = {{r^{n+1}-1}\over{r-1}}$ for
+$r\not=1$
+
+\;\;\;\;\;\;\;\;\;\;\;\;\,\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;$={1\over{1-r}}$ for $|r|<1$.
+
+Harmonic: $1+{1\over2}+\cdots+{1\over n}
+=\ln n+\gamma+{\epsilon\over{2n}}$
+
+for $\gamma=0.5772156649\ldots$
+(Euler's constant) and $0<\epsilon<1$.
+
+
+Binomial: ${n\choose 0}+{n\choose 1}+{n\choose 2}+
+\cdots+{n\choose n}=2^n$.
+
+Other useful sums:
+
+$\sum_{i=1}^n i^2={1\over6}n(n+1)(2n+1)$.
+
+$\sum_{i=1}^n i^3=(\sum_{i=1}^n i)^2$.
+
+$\sum_{i=1}^n ix^{i-1}={{nx^{n+1}-(n+1)x^n+1}\over{(x-1)^2}}$.
+
+
+    \textbf{1.4 Proof Techniques}
+
+Contradiction
+
+Induction: basis, hypothesis, step
+
+
+
+    \textbf{1.5 Solving Recurrences}
+
+Iteration: Appy recurrence until can figure out summation
+
+{\em Example:} $T(n)=3T({n\over4})+n$.
+
+Assume $n=4^k$, so $k=\log_4 n$.
+\begin{eqnarray*}
+T(n)&=&3T({n\over4})+n\\
+&=&3^2T({n\over{4^2}})+{3\over4}n+n\\
+&=&3^3T({n\over{4^3}})+({3\over4})^2n+({3\over4})n+n\\
+&=&\cdots\\
+&=&3^kT({n\over{4^k}})+(({3\over4})^{k-1}+\cdots+({3\over4})+1)n\\
+&=&3^{\log_4 n}+{{1-({3\over4})^{\log_4 n}}\over{1-{3\over4}}}n\\
+&=&4n-3\cdot 3^{\log_4 n}\\
+&=&O(n).
+\end{eqnarray*}
+
+
+Recursion Tree:
+
+Master: does not cover all cases
+
+{\em Master Theorem:} If $T(n)=aT({n\over b})+f(n)$ for $a\ge1$ and $b>1$, then
+
+(a) if $f(n)=O(n^{(\log_ba)-\epsilon})$ for some $\epsilon>0$, then
+$T(n)=\Theta(n^{\log_ba})$;
+
+(b) if $f(n)=\Theta(n^{\log_ba})$, then
+$T(n)=\Theta(n^{\log_ba}\log n)$;
+
+(c) if $f(n)=\Omega(n^{(\log_ba)+\epsilon})$ for $\epsilon>0$ and if
+$af({n\over b})\le cf(n)$ for $c<1$ and all large $n$, then
+$T(n)=\Theta(f(n))$.
+
+
+{\em Example:} $T(n)=3T({n\over4})+n\log n$.
+
+$a=3$, $b=4$, and $f(n)=n\log n$.
+Case (c) applies. So $T(n)=\Theta(n\log n)$.
+
+Substitution:
