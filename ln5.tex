@@ -1,0 +1,37 @@
+    \begin{itemize}[label=\bullet]
+        \item Divide-and-conquer (D\&C) algorithms use recursion. Top-down, efficient when the subproblems don’t overlap.
+        
+         \item Subproblems do overlap (share sub-subproblems)-  dynamic programming used
+
+        \item
+        General technique:
+        \begin{verbatim}
+function D&C(x)
+ if x is small and or 
+ simple then return adhoc(x)
+ divide x into smaller 
+ instances x1 , . . . , xk where k >=1
+ for i<- 1 to k
+   yi <- D&C(xi)
+ combine the yi ’s to obtain a 
+ solution y to x
+ return 
+\end{verbatim}
+\item Time complexity  in General
+$T(n) = \sum_{i=1}^k T(n_i ) + D(n) +C(n)$, where D(n) and C(n) are time for “divide” and “combine”,
+respectively
+\item  Common Time Complexities :
+\\$O(\log n):T(n)=T(\frac{n}{2})+1,  O(n):T(n)=2T(\frac{n}{2})+1$ or $T(\frac{n}{2})+n, O(n \log n): T(n)=2T(\frac{n}{2})+n$ or $T(\frac{n}{2})+n \log n, O(n^2): T(n)=4T(\frac{n}{2})+n$ or $2T(\frac{n}{2})+n^2$
+\item Common D\&C algos
+\\
+Binary search= O(logn), Merge sort=O(nlogn), Quick sort (best case)= O(nlogn), Integer multiplication= O($n^{\log3})=O(n^{1.585})$
+\item  Examples:
+Quicksort is a sorting algorithm that uses a divide-and-conquer strategy to sort an array. 
+It does so by selecting a\\ pivot element and then sorting values \\larger than it on one side and smaller to \\the other side, and then it repeats those \\steps until the array is sorted.
+\item Let $T (n) \leq cn$ for $n \leq 49$ and $T (n) \leq T (n/5) + T (3n/4 ) + cn$\\ for $n \geq 50$.Its true that $T (n) \leq 20cn$
+
+
+
+    \end{itemize}
+   
+   
