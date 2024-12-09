@@ -1,20 +1,15 @@
 \\
-$\rightarrow$ solve optimization problems with solutions consisting a sequence of choices. 
-
-1. Make the best choice at the moment
-2. Never changes the choices
-3. Not always optimal
-
-Examples: coin exchange, knapsack, bin packing, kruskal's MST, Dijkstra's 
-
-General algorithm:
-
-1. Define: Select(x), S (solution set), C (set of choices) \\
-2. While S is not solution and $C \neq \phi$ \\
-3. Select a choice x from C that optimizes Select(x) \\
-4. Add x to S if feasible; remove x from C
-
-$\rightarrow$ To prove that the greedy algorithm is optimal:
+$\rightarrow$ solve optimization problems with solutions consisting a sequence of choices.
+Steps:
+(1) Make the best choice at the moment,
+(2) Never changes the choices,
+(3) Not always optimal.
+Examples: coin exchange, knapsack, bin packing, kruskal's MST, Dijkstra's.
+Algorithm:
+1. Define: Select(x), S (solution set), C (set of choices)
+2. While S is not solution and $C \neq \phi$
+3. Select a choice x from C that optimizes Select(x)
+4. Add x to S if feasible; remove x from C.
 
 \textbf{Proof by transformation:} Use when multiple optimal solutions exist. Steps:
 
