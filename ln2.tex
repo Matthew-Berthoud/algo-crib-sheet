@@ -12,16 +12,11 @@ Insertion\_Sort($A$)
 \par\quad\quad\quad $i\leftarrow i-1$
 \par\quad\quad $A[i+1]\leftarrow key$
 
-To insert $A[j]$ into the sorted $A[1\ldots j-1]$, the algorithm
-will make at most $j-1$ comparisons and $j-1$ shifts. So the overall 
-time complexity,
-which is dominated by the number of comparisons and the number of
-shifts, is at most $2\sum_{j=2}^n(j-1)
-=\Theta(n^2)$.
+To insert $A[j]$ into sorted $A[1\ldots j-1]$, algo'll make at most $j-1$ comps and $j-1$ shifts. Overall 
+time complexity, which is dominated by the number of comparisons and the number of
+shifts, is at most $2\sum_{j=2}^n(j-1) =\Theta(n^2)$.
 
-
-
-Euclid's algorithm (300 B.C.): Greatest common divisor.
+\textbf{Euclid's algorithm - GCD}
 
 If $n\not=0$, then $gcd(m,n)=gcd(n, m \bmod n)$;
 
@@ -34,11 +29,11 @@ Euclid($m,n$)\qquad //Assume $m\ge n$
 \par\quad\quad $n\leftarrow t$
 \par\quad return $m$
 
-The time complexity of the algorithm is determined by the number of iterations
-of the while-loop. Let it be $k$. Also let $m_i$ and $n_i$ be the values of
-$m$ and $n$ at the end of the $i$th iteration, respectively.
+Time Cmplxty is determined by no. of iters of while-loop. 
+Let it be $k$. Let $m_i$ and $n_i$ be values of
+$m$ and $n$ at end of $i$th iter, respectively.
 
-We observe that (1) $n_k=0$, $n_i\ge 1$ for $i<k$, and 
+We find (1) $n_k=0$, $n_i\ge 1$ for $i<k$, and 
 $n_0>n_1>\cdots>n_k$; (2) $m_i=n_{i-1}$, which implies that $m_i\ge n_i$ 
 for $i\ge1$; (3) $n_i=m_{i-1} \bmod n_{i-1}<{m_{i-1}\over2}={n_{i-2}\over2}$
 for $i\ge2$. (Note: If $a\ge b$, then $a\bmod b<{a\over2}$.)
@@ -53,7 +48,7 @@ So $T(m,n)=O(k)=O(\log n)$.
 
 
 
-Multiplying two integers $x$ and $y$: 
+- Multiplying two integers $x$ and $y$: 
 
 Assume that $x$ (multiplicand) and $y$ (multiplier) 
 have the same number of figures, $n=2^k$,
